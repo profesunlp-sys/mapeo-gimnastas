@@ -177,17 +177,17 @@ label {
 input, select, textarea {
     padding: 0.75rem 1rem;
     border: 1px solid var(--border);
-    border-radius: var(--radius-md);
-    font-size: 1rem;
-    background: var(--surface-low);
-    transition: all 0.2s;
+    border-radius: var(--radius-sm);
+    font-size: 0.9rem;
+    background: var(--surface2);
+    color: var(--text);
+    outline: none;
+    transition: var(--transition);
 }
 
 input:focus, select:focus, textarea:focus {
-    outline: none;
     border-color: var(--primary);
-    background: white;
-    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.1);
+    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
 }
 
 /* Badges */
@@ -249,21 +249,7 @@ input:focus, select:focus, textarea:focus {
 }
 
 /* Form Styles */
-input, select {
-    background: var(--surface3);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    padding: 9px 12px;
-    color: var(--text);
-    font-size: 0.9rem;
-    outline: none;
-    transition: var(--transition);
-}
-
-input:focus, select:focus {
-    border-color: var(--primary);
-    box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.2);
-}
+/* Removed duplicate input/select definition to keep it consistent */
 
 label {
     display: block;
@@ -335,15 +321,15 @@ label {
     transition: background 0.2s;
 }
 
-.ded-check:hover { background: var(--surface-low); }
+.ded-check:hover { background: var(--surface3); }
 .ded-check input { width: 1.15rem; height: 1.15rem; cursor: pointer; }
-.ded-val { font-weight: 700; color: var(--danger); font-size: 0.75rem; }
+.ded-val { font-weight: 700; color: var(--red); font-size: 0.75rem; }
 
 /* Segmented Deductions */
 .deduction-item {
-    background: white;
+    background: var(--surface2);
     padding: 0.75rem 1rem;
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-sm);
     border: 1px solid var(--border);
     display: flex;
     flex-direction: column;
@@ -369,37 +355,37 @@ label {
 
 .btn-segment {
     border: 1px solid var(--border);
-    background: var(--surface-low);
+    background: var(--surface3);
     padding: 0.4rem 0.8rem;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
     font-size: 0.75rem;
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s;
-    color: var(--text-secondary);
+    color: var(--text2);
     min-width: 44px;
 }
 
 .btn-segment:hover {
-    background: #f8fafc;
-    border-color: var(--text-muted);
+    background: var(--surface);
+    border-color: var(--primary);
 }
 
 .btn-segment.active {
-    background: var(--danger) !important;
+    background: var(--red) !important;
     color: white !important;
-    border-color: var(--danger) !important;
-    box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+    border-color: var(--red) !important;
+    box-shadow: 0 4px 12px rgba(239, 71, 111, 0.3);
 }
 
 .btn-segment.is-max {
-    border-color: var(--danger);
-    color: var(--danger);
-    background: #fef2f2;
+    border-color: var(--red);
+    color: var(--red);
+    background: rgba(239, 71, 111, 0.1);
 }
 
 .btn-segment.is-max:hover {
-    background: #fee2e2;
+    background: rgba(239, 71, 111, 0.2);
 }
 
 /* Global Deductions Grid */
@@ -408,8 +394,9 @@ label {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 0.75rem;
     padding: 1rem;
-    background: var(--surface-low);
-    border-radius: var(--radius-md);
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
 }
 
 /* Falls Counter */
@@ -419,9 +406,9 @@ label {
     justify-content: space-between;
     align-items: center;
     padding: 1.5rem;
-    background: #fff1f2;
-    border: 1px solid #fecaca;
-    border-radius: var(--radius-md);
+    background: var(--surface2);
+    border: 1px solid var(--red);
+    border-radius: var(--radius);
 }
 
 .counter-label {
@@ -431,8 +418,8 @@ label {
 }
 
 .counter-label icon { font-size: 1.5rem; }
-.counter-label strong { font-size: 1.125rem; color: #991b1b; }
-.counter-label small { color: #b91c1c; }
+.counter-label strong { font-size: 1.125rem; color: var(--red); }
+.counter-label small { color: var(--text2); }
 
 .counter-controls {
     display: flex;
@@ -446,19 +433,22 @@ label {
     width: 44px;
     height: 44px;
     border-radius: 50%;
-    border: 3px solid #fecaca;
-    background: white;
+    border: 2px solid var(--red);
+    background: var(--surface3);
     font-size: 1.5rem;
     font-weight: 800;
     cursor: pointer;
-    color: #991b1b;
+    color: var(--red);
     display: flex;
     align-items: center;
     justify-content: center;
     transition: all 0.2s;
 }
 
-.btn-circle:hover { background: #fecaca; }
+.btn-circle:hover { 
+    background: var(--red);
+    color: white;
+}
 
 /* Score Panel */
 .score-panel {
@@ -540,7 +530,7 @@ label {
 .mt-4 { margin-top: 1rem; }
 .mt-8 { margin-top: 2rem; }
 .mb-6 { margin-bottom: 1.5rem; }
-.text-danger { color: #fee2e2; }
+.text-danger { color: var(--red); }
 
 /* Prompt */
 .start-prompt {
