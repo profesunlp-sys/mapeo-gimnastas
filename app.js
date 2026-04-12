@@ -343,7 +343,10 @@ function openModal(id) {
     if (!g) return;
     document.getElementById('modalTitle').textContent = '✏ Editar Gimnasta';
     document.getElementById('fName').value = g.name || '';
-    if (document.getElementById('fGroup')) document.getElementById('fGroup').value = g.groupId || '';
+    if (document.getElementById('fGroup')) {
+      document.getElementById('fGroup').value = g.groupId || '';
+      onGroupChange(); // Forzar recalculó de clases teóricas
+    }
     document.getElementById('fYears').value = g.years !== undefined ? g.years : '';
     document.getElementById('fTotalClases').value = g.totalClases || '';
     document.getElementById('fAsistio').value = g.asistio || '';
@@ -456,31 +459,41 @@ function calculateExpectedClasses(groupId) {
   const gr = window.CLUB_GROUPS.find(g => g.id === groupId);
   if (!gr || !window.CLUB_CONFIG) return 0;
   
-  // Mapear el string 'days' a los días de la semana (0:Dom, 1:Lun, 2:Mar, 3:Mie, 4:Jue, 5:Vie, 6:Sab)
   let validDays = [];
   const daysStr = gr.days.toLowerCase();
   if (daysStr.includes('lunes y miércoles')) validDays = [1, 3];
   else if (daysStr.includes('martes y jueves')) validDays = [2, 4];
   else if (daysStr.includes('sábado') || daysStr.includes('sabado')) validDays = [6];
-  else return 0; // Fallback
+  else return 0;
   
-  const start = new Date(window.CLUB_CONFIG.periodStart + 'T00:00:00');
-  const end = new Date(window.CLUB_CONFIG.periodEnd + 'T00:00:00');
+  // Parseo seguro de fechas YYYY-MM-DD
+  const parseSafe = (s) => {
+    const parts = s.split('-');
+    return new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
+  };
+  
+  const start = parseSafe(window.CLUB_CONFIG.periodStart);
+  const end = parseSafe(window.CLUB_CONFIG.periodEnd);
   const holidays = window.CLUB_CONFIG.holidays || [];
   
   let count = 0;
   let currentDate = new Date(start);
   
-  while (currentDate <= end) {
-    // 1. Ver si es un día de cursada
+  // Limitar el bucle para evitar infinitos en caso de error
+  let safety = 0;
+  while (currentDate <= end && safety < 500) {
+    safety++;
     if (validDays.includes(currentDate.getDay())) {
-      // 2. Ver si NO es feriado
-      const isoDate = currentDate.toISOString().split('T')[0];
-      if (!holidays.includes(isoDate)) {
+      // Uso de locale para comparar fechas de forma segura sin UTC
+      const y = currentDate.getFullYear();
+      const m = String(currentDate.getMonth() + 1).padStart(2, '0');
+      const d = String(currentDate.getDate()).padStart(2, '0');
+      const dateStr = `${y}-${m}-${d}`;
+      
+      if (!holidays.includes(dateStr)) {
         count++;
       }
     }
-    // Siguiente día
     currentDate.setDate(currentDate.getDate() + 1);
   }
   return count;
