@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0d0f1a">
+<meta name="description" content="Sistema digital de mapeo y evaluación de gimnastas artísticas. Detectá potencial deportivo, registrá asistencia y progreso pedagógico.">
+<title>Mapeo de Gimnastas 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="header-brand">
+        <div class="brand-icon">🤸</div>
+        <div>
+          <h1>Mapeo de Gimnastas 2026</h1>
+          <p class="brand-sub">Sistema de detección de potencial deportivo</p>
+        </div>
+      </div>
+      <div class="header-meta">
+        <div class="meta-field">
+          <label>Profesora/or</label>
+          <input type="text" id="teacherName" placeholder="Tu nombre..." autocomplete="name" />
+        </div>
+        <div class="meta-field">
+          <label>Fecha</label>
+          <input type="date" id="evalDate" />
+        </div>
+        <button class="btn-export" id="btnExport" onclick="exportCSV()">⬇ Exportar CSV</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- STATS -->
+  <section class="stats-bar" aria-label="Resumen por nivel">
+    <div class="stat-card" id="stat-total"><span class="stat-num">0</span><span class="stat-label">Total</span></div>
+    <div class="stat-card lvl-e1b" id="stat-e1b"><span class="stat-num">0</span><span class="stat-label">E1B</span></div>
+    <div class="stat-card lvl-e1a" id="stat-e1a"><span class="stat-num">0</span><span class="stat-label">E1A</span></div>
+    <div class="stat-card lvl-e2" id="stat-e2"><span class="stat-num">0</span><span class="stat-label">E2</span></div>
+    <div class="stat-card lvl-e3" id="stat-e3"><span class="stat-num">0</span><span class="stat-label">E3</span></div>
+    <div class="stat-card lvl-u1b" id="stat-u1b"><span class="stat-num">0</span><span class="stat-label">U1B</span></div>
+    <div class="stat-card lvl-u1a" id="stat-u1a"><span class="stat-num">0</span><span class="stat-label">U1A</span></div>
+    <div class="stat-card lvl-u2" id="stat-u2"><span class="stat-num">0</span><span class="stat-label">U2</span></div>
+    <div class="stat-card lvl-u3" id="stat-u3"><span class="stat-num">0</span><span class="stat-label">U3</span></div>
+    <div class="stat-card lvl-comp" id="stat-comp"><span class="stat-num">0</span><span class="stat-label">Comp.</span></div>
+  </section>
+
+  <!-- TOOLBAR -->
+  <div class="toolbar">
+    <button class="btn-add" id="btnAdd" onclick="openModal(null)">+ Agregar Gimnasta</button>
+    <div class="filter-group">
+      <select id="filterLevel" onchange="renderView()" aria-label="Filtrar por nivel">
+        <option value="">Todos los niveles</option>
+        <option value="Principiante">Principiante</option>
+        <option value="E1B">E1B</option>
+        <option value="E1A">E1A</option>
+        <option value="E2">E2</option>
+        <option value="E3">E3</option>
+        <option value="USAG1B">USAG 1B</option>
+        <option value="USAG1A">USAG 1A</option>
+        <option value="USAG2">USAG 2</option>
+        <option value="USAG3">USAG 3</option>
+        <option value="Recreativo">Recreativo</option>
+      </select>
+      <select id="filterPred" onchange="renderView()" aria-label="Filtrar por predisposición">
+        <option value="">Todas</option>
+        <option value="1">🏆 Comp. comprometida</option>
+        <option value="2">⭐ Comp. en desarrollo</option>
+        <option value="3">💪 Deportiva</option>
+        <option value="4">🌸 Recreativa</option>
+        <option value="5">👪 Asistencial</option>
+      </select>
+      <input type="search" id="filterName" placeholder="🔍 Buscar nombre..." oninput="renderView()" aria-label="Buscar por nombre" />
+    </div>
+    <span id="countLabel" class="count-label"></span>
+  </div>
+
+  <!-- CONTENT AREA -->
+  <div class="table-wrap">
+
+    <!-- MOBILE/TABLET: Cards -->
+    <div class="cards-list" id="cardsList"></div>
+
+    <!-- DESKTOP: Table -->
+    <table id="mainTable" aria-label="Lista de gimnastas">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Nombre y Apellido</th>
+          <th>Nivel</th>
+          <th>Años</th>
+          <th>Días/sem</th>
+          <th>Asistencia</th>
+          <th>Comprende</th>
+          <th>Incorpora</th>
+          <th>Predisposición</th>
+          <th>Flexib.</th>
+          <th>Fuerza</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody"></tbody>
+    </table>
+
+    <div id="emptyState" class="empty-state" style="display:none">
+      <div class="empty-icon">🤸‍♀️</div>
+      <p>No hay gimnastas cargados aún.</p>
+      <p>Tocá <strong>+ Agregar Gimnasta</strong> para comenzar.</p>
+    </div>
+
+  </div>
+
+</div><!-- /#app -->
+
+<!-- FAB mobile -->
+<button class="fab-add" id="fabAdd" onclick="openModal(null)" aria-label="Agregar gimnasta">＋</button>
+
+<!-- MODAL -->
+<div id="modalOverlay" class="modal-overlay" onclick="closeModalOnOverlay(event)" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal" id="modal">
+    <div class="modal-drag" aria-hidden="true"></div>
+    <div class="modal-header">
+      <h2 id="modalTitle">Nuevo Gimnasta</h2>
+      <button class="modal-close" onclick="closeModal()" aria-label="Cerrar">✕</button>
+    </div>
+    <div class="modal-body">
+
+      <!-- SECCIÓN 1: Datos generales -->
+      <div class="form-section">
+        <h3 class="section-title">👤 Datos Generales</h3>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="fName">Nombre y Apellido *</label>
+            <input type="text" id="fName" placeholder="Apellido, Nombre" autocomplete="off" inputmode="text" />
+          </div>
+          <div class="form-group">
+            <label for="fYears">Años en la actividad</label>
+            <input type="number" id="fYears" min="0" max="20" placeholder="0" inputmode="numeric" />
+          </div>
+          <div class="form-group">
+            <label for="fDays">Días por semana</label>
+            <select id="fDays">
+              <option value="">—</option>
+              <option value="1">1 día</option>
+              <option value="2">2 días</option>
+              <option value="3">3 días</option>
+              <option value="4">4 días</option>
+              <option value="5">5 días</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label for="fTotalClases">Total clases en el mes</label>
+            <input type="number" id="fTotalClases" min="0" max="30" placeholder="ej: 12" inputmode="numeric" oninput="calcAttendance()" />
+          </div>
+          <div class="form-group">
+            <label for="fAsistio">Clases a las que asistió</label>
+            <input type="number" id="fAsistio" min="0" max="30" placeholder="ej: 10" inputmode="numeric" oninput="calcAttendance()" />
+          </div>
+          <div class="form-group">
+            <label>% Asistencia</label>
+            <div class="attendance-display" id="attendanceDisplay">—</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 2: Nivel y serie -->
+      <div class="form-section">
+        <h3 class="section-title">🏅 Nivel y Serie</h3>
+        <div class="form-grid">
+          <div class="form-group full">
+            <label for="fLevel">Nivel actual</label>
+            <select id="fLevel" onchange="renderElements()">
+              <option value="">— Seleccionar nivel —</option>
+              <option value="Principiante">Principiante (sin serie definida)</option>
+              <option value="E1B">E1B — CAG (Salto + Suelo)</option>
+              <option value="E1A">E1A — CAG (4 aparatos)</option>
+              <option value="E2">E2 — CAG (4 aparatos)</option>
+              <option value="E3">E3 — CAG (4 aparatos)</option>
+              <option value="USAG1B">USAG Nivel 1B (2 aparatos)</option>
+              <option value="USAG1A">USAG Nivel 1A (2 aparatos)</option>
+              <option value="USAG2">USAG Nivel 2 (4 aparatos)</option>
+              <option value="USAG3">USAG Nivel 3 (4 aparatos)</option>
+              <option value="Recreativo">Recreativo (sin serie)</option>
+            </select>
+          </div>
+        </div>
+        <!-- Elementos dinámicos -->
+        <div id="elementsContainer"></div>
+      </div>
+
+      <!-- SECCIÓN 3: Evaluación pedagógica -->
+      <div class="form-section">
+        <h3 class="section-title">🧠 Evaluación Pedagógica</h3>
+        <div class="toggle-grid">
+          <div class="toggle-item">
+            <span>Comprende las consignas con facilidad</span>
+            <div class="toggle-group" id="tog-comprende" role="group" aria-label="Comprende consignas">
+              <button onclick="setToggle('comprende','si',this)" data-val="si">✓ Sí</button>
+              <button onclick="setToggle('comprende','parcial',this)" data-val="parcial">~ Parcial</button>
+              <button onclick="setToggle('comprende','no',this)" data-val="no">✗ No</button>
+            </div>
+          </div>
+          <div class="toggle-item">
+            <span>Las incorpora rápidamente</span>
+            <div class="toggle-group" id="tog-incorpora" role="group" aria-label="Incorpora rápido">
+              <button onclick="setToggle('incorpora','si',this)" data-val="si">✓ Sí</button>
+              <button onclick="setToggle('incorpora','parcial',this)" data-val="parcial">~ Parcial</button>
+              <button onclick="setToggle('incorpora','no',this)" data-val="no">✗ No</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 4: Predisposición -->
+      <div class="form-section">
+        <h3 class="section-title">❤️ Predisposición a la Actividad</h3>
+        <div class="radio-list" id="predOptions" role="radiogroup" aria-label="Predisposición">
+          <label class="radio-opt"><input type="radio" name="pred" value="1"> <div><span class="pred-badge p1">🏆 Competitiva comprometida</span><small>Le apasiona, corrige, se esfuerza y quiere competir</small></div></label>
+          <label class="radio-opt"><input type="radio" name="pred" value="2"> <div><span class="pred-badge p2">⭐ Competitiva en desarrollo</span><small>Le gusta y muestra interés en competir, pero aún no tiene claro el compromiso</small></div></label>
+          <label class="radio-opt"><input type="radio" name="pred" value="3"> <div><span class="pred-badge p3">💪 Deportiva sin competencia</span><small>Le gusta mucho la gimnasia, se esfuerza, pero no quiere competir</small></div></label>
+          <label class="radio-opt"><input type="radio" name="pred" value="4"> <div><span class="pred-badge p4">🌸 Recreativa</span><small>Disfruta la actividad como esparcimiento, sin interés competitivo</small></div></label>
+          <label class="radio-opt"><input type="radio" name="pred" value="5"> <div><span class="pred-badge p5">👪 Asistencial</span><small>Viene por iniciativa familiar, sin motivación propia visible</small></div></label>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 5: Condición física -->
+      <div class="form-section">
+        <h3 class="section-title">💪 Condición Física Base</h3>
+        <div class="physical-grid">
+          <div class="phys-item">
+            <label>Flexibilidad general</label>
+            <div class="seg-group" id="seg-flex" role="group">
+              <button onclick="setSeg('flex','Baja',this)">Baja</button>
+              <button onclick="setSeg('flex','Media',this)">Media</button>
+              <button onclick="setSeg('flex','Alta',this)">Alta</button>
+            </div>
+          </div>
+          <div class="phys-item">
+            <label>Fuerza de brazos</label>
+            <div class="seg-group" id="seg-fuerzaBrazos" role="group">
+              <button onclick="setSeg('fuerzaBrazos','Baja',this)">Baja</button>
+              <button onclick="setSeg('fuerzaBrazos','Media',this)">Media</button>
+              <button onclick="setSeg('fuerzaBrazos','Alta',this)">Alta</button>
+            </div>
+          </div>
+          <div class="phys-item">
+            <label>Fuerza de tronco</label>
+            <div class="seg-group" id="seg-fuerzaTronco" role="group">
+              <button onclick="setSeg('fuerzaTronco','Baja',this)">Baja</button>
+              <button onclick="setSeg('fuerzaTronco','Media',this)">Media</button>
+              <button onclick="setSeg('fuerzaTronco','Alta',this)">Alta</button>
+            </div>
+          </div>
+          <div class="phys-item">
+            <label>Coordinación y ritmo</label>
+            <div class="seg-group" id="seg-coordinacion" role="group">
+              <button onclick="setSeg('coordinacion','Baja',this)">Baja</button>
+              <button onclick="setSeg('coordinacion','Media',this)">Media</button>
+              <button onclick="setSeg('coordinacion','Alta',this)">Alta</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECCIÓN 6: Dudas / Consultas -->
+      <div class="form-section">
+        <h3 class="section-title">❓ Dudas y Consultas de Enseñanza</h3>
+        <textarea id="fDudas" placeholder="Anotá aquí cualquier dificultad técnica, pregunta o situación puntual..." rows="3"></textarea>
+      </div>
+
+      <!-- SECCIÓN 7: Observaciones -->
+      <div class="form-section">
+        <h3 class="section-title">📝 Observaciones Generales</h3>
+        <textarea id="fObs" placeholder="Cualquier observación adicional sobre el/la gimnasta..." rows="3"></textarea>
+      </div>
+
+    </div>
+    <div class="modal-footer">
+      <button class="btn-cancel" onclick="closeModal()">Cancelar</button>
+      <button class="btn-delete" id="btnDelete" onclick="deleteGymnast()" style="display:none">🗑 Eliminar</button>
+      <button class="btn-save" onclick="saveGymnast()">💾 Guardar</button>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
