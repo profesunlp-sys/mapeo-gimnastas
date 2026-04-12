@@ -118,7 +118,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         const age = 2026 - year;
-        const cat = EVAL_CONSTANTS.CATEGORIES.find(c => age >= c.min && age <= c.max);
+        const constants = window.EVAL_CONSTANTS || {};
+        const categories = constants.CATEGORIES || [];
+        const cat = categories.find(c => age >= c.min && age <= c.max);
         
         if(cat) {
             currentState.category = cat.name;
@@ -135,12 +137,15 @@ document.addEventListener('DOMContentLoaded', () => {
         const level = dom.levelSelect.value;
         currentState.level = level;
         
+        const levelDetails = window.EVAL_LEVEL_DETAILS || {};
+        const levelData = levelDetails[level];
+        
         // Reset apparatus selection
         dom.apparatusSelect.value = "";
         currentState.apparatus = "";
         hideEvaluation();
 
-        // Level E1B only has VT and FX
+        // Level-specific apparatus filtering (e.g. E1B only VT/FX)
         if(level === 'E1B') {
             Array.from(dom.apparatusSelect.options).forEach(opt => {
                 if(opt.value && opt.value !== 'SALTO' && opt.value !== 'SUELO') {
@@ -183,7 +188,16 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function renderEvaluation() {
-        const levelData = EVAL_LEVEL_DETAILS[currentState.level];
+        if(!currentState.level || !currentState.apparatus) return;
+
+        const levelDetails = window.EVAL_LEVEL_DETAILS || {};
+        const levelData = levelDetails[currentState.level];
+        
+        if(!levelData || !levelData.aparatos) {
+            console.error("Nivel o aparatos no encontrados para:", currentState.level);
+            return;
+        }
+
         const appData = levelData.aparatos[currentState.apparatus];
         
         if(!appData) {
@@ -268,8 +282,9 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 2. Global Execution
-        renderGlobalDeductions(dom.execDeducsArea, GLOBAL_DEDUCTIONS.EXECUTION, 'exec');
-        renderGlobalDeductions(dom.landDeducsArea, GLOBAL_DEDUCTIONS.LANDINGS, 'land');
+        const globalDeds = window.GLOBAL_DEDUCTIONS || { EXECUTION: [], LANDING: [] };
+        renderGlobalDeductions(dom.execDeducsArea, globalDeds.EXECUTION, 'exec');
+        renderGlobalDeductions(dom.landDeducsArea, globalDeds.LANDING, 'land');
 
         // Add Listeners to all new checkboxes
         setupListeners();
