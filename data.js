@@ -1,7 +1,7 @@
 // =====================================================
 // ELEMENTOS POR NIVEL - Extraídos de programas CAG 2026 y USAG 2021-2029
 // =====================================================
-const LEVEL_DATA = {
+window.LEVEL_DATA = {
 
   'E1B': {
     label: 'E1B — CAG',
@@ -279,7 +279,7 @@ const LEVEL_DATA = {
   }
 };
 
-const PRED_LABELS = {
+window.PRED_LABELS = {
   '1': { text: '🏆 Competitiva comprometida', cls: 'pm1' },
   '2': { text: '⭐ Competitiva en desarrollo', cls: 'pm2' },
   '3': { text: '💪 Deportiva sin competencia', cls: 'pm3' },

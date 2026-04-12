@@ -1,11 +1,42 @@
 // =====================================================
 // APP.JS — Lógica principal de la planilla de mapeo
 //          Responsive: card view (mobile) + table (desktop)
+//          Firebase Firestore para guardado en la nube
 // =====================================================
 
-let gymnasts = JSON.parse(localStorage.getItem('gymnasts') || '[]');
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.js";
+import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
+
+const firebaseConfig = {
+  projectId: "gymcoachpro-c0c8e",
+  appId: "1:923517600594:web:a81bdd1a150b7f22dcf08b",
+  storageBucket: "gymcoachpro-c0c8e.firebasestorage.app",
+  apiKey: "AIzaSyBbuRw3J7t_8xQc-6_qOqQDdjEEWZgSHaY",
+  authDomain: "gymcoachpro-c0c8e.firebaseapp.com",
+  messagingSenderId: "923517600594",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const gimnastasRef = collection(db, "gimnastas_mapeo");
+
+let gymnasts = [];
 let editingId = null;
 let formState = {};
+
+// ─── EXPORT TO WINDOW TO MAKE ONCLICK WORK in ES MODULE ────────
+window.openModal = openModal;
+window.closeModal = closeModal;
+window.closeModalOnOverlay = closeModalOnOverlay;
+window.setToggle = setToggle;
+window.setSeg = setSeg;
+window.calcAttendance = calcAttendance;
+window.renderElements = renderElements;
+window.setElemState = setElemState;
+window.saveGymnast = saveGymnast;
+window.deleteGymnast = deleteGymnast;
+window.exportCSV = exportCSV;
+window.renderView = renderView;
 
 // ─── INIT ──────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -26,8 +57,20 @@ document.addEventListener('DOMContentLoaded', () => {
   updateFABVisibility();
   window.addEventListener('resize', updateFABVisibility);
 
-  renderView();
-  updateStats();
+  // Firestore Snapshot (cargará datos iniciales también)
+  onSnapshot(gimnastasRef, (snapshot) => {
+    gymnasts = [];
+    snapshot.forEach((docSnapshot) => {
+      gymnasts.push({ id: docSnapshot.id, ...docSnapshot.data() });
+    });
+    // Ordenar por nombre
+    gymnasts.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+    renderView();
+    updateStats();
+  }, (error) => {
+    console.error("Error cargando de Firebase: ", error);
+    showToast("Error de conexión al cargar", true);
+  });
 });
 
 function updateFABVisibility() {
@@ -369,13 +412,12 @@ function setElemState(key, state, btn) {
 }
 
 // ─── SAVE / DELETE ─────────────────────────────────
-function saveGymnast() {
+async function saveGymnast() {
   const name = document.getElementById('fName').value.trim();
   if (!name) { showToast('Por favor escribí el nombre de la gimnasta.', true); return; }
 
   const pred = document.querySelector('input[name="pred"]:checked');
   const g = {
-    id: editingId || Date.now().toString(36) + Math.random().toString(36).slice(2),
     name,
     years: document.getElementById('fYears').value,
     days: document.getElementById('fDays').value,
@@ -392,33 +434,51 @@ function saveGymnast() {
     elements: formState.elements ? JSON.parse(JSON.stringify(formState.elements)) : {},
     dudas: document.getElementById('fDudas').value,
     obs: document.getElementById('fObs').value,
-    updatedAt: new Date().toISOString()
   };
 
-  if (editingId) {
-    const idx = gymnasts.findIndex(x => x.id === editingId);
-    if (idx >= 0) gymnasts[idx] = g;
-  } else {
-    gymnasts.push(g);
-  }
+  try {
+    const btnSave = document.querySelector('.btn-save');
+    const oldText = btnSave.textContent;
+    btnSave.textContent = 'Guardando...';
+    btnSave.disabled = true;
 
-  localStorage.setItem('gymnasts', JSON.stringify(gymnasts));
-  closeModal();
-  renderView();
-  updateStats();
-  showToast(editingId ? '✓ Gimnasta actualizada.' : '✓ Gimnasta agregada.');
+    if (editingId) {
+      g.updatedAt = new Date().toISOString();
+      await updateDoc(doc(db, "gimnastas_mapeo", editingId), g);
+      showToast('✓ Gimnasta actualizada en la nube.');
+    } else {
+      g.createdAt = new Date().toISOString();
+      await addDoc(gimnastasRef, g);
+      showToast('✓ Gimnasta agregada a la nube.');
+    }
+    closeModal();
+    btnSave.textContent = oldText;
+    btnSave.disabled = false;
+  } catch (error) {
+    console.error("Error al guardar: ", error);
+    showToast("Error al guardar: " + error.message, true);
+    document.querySelector('.btn-save').disabled = false;
+    document.querySelector('.btn-save').textContent = '💾 Guardar';
+  }
 }
 
-function deleteGymnast() {
+async function deleteGymnast() {
   if (!editingId) return;
   const g = gymnasts.find(x => x.id === editingId);
-  if (!confirm(`¿Eliminar a ${g ? g.name : 'esta gimnasta'}? Esta acción no se puede deshacer.`)) return;
-  gymnasts = gymnasts.filter(x => x.id !== editingId);
-  localStorage.setItem('gymnasts', JSON.stringify(gymnasts));
-  closeModal();
-  renderView();
-  updateStats();
-  showToast('Gimnasta eliminada.');
+  if (!confirm(`¿Eliminar a ${g ? g.name : 'esta gimnasta'} de la base de datos? Esta acción no se puede deshacer.`)) return;
+  
+  try {
+    const btnDel = document.getElementById('btnDelete');
+    btnDel.disabled = true;
+    await deleteDoc(doc(db, "gimnastas_mapeo", editingId));
+    showToast('Gimnasta eliminada de la nube.');
+    closeModal();
+    btnDel.disabled = false;
+  } catch (error) {
+    console.error("Error al eliminar: ", error);
+    showToast("Error al eliminar: " + error.message, true);
+    document.getElementById('btnDelete').disabled = false;
+  }
 }
 
 // ─── EXPORT CSV ────────────────────────────────────
