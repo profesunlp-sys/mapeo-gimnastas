@@ -72,7 +72,8 @@ document.addEventListener('DOMContentLoaded', () => {
         window.CLUB_GROUPS.forEach(gr => {
             const opt = document.createElement('option');
             opt.value = gr.id;
-            opt.textContent = `${gr.days} - ${gr.teacher}`;
+            const detail = gr.levelDetail ? ` (${gr.levelDetail})` : '';
+            opt.textContent = `${gr.days} - ${gr.teacher} - ${gr.age}${detail}`;
             fg.appendChild(opt);
         });
     }
