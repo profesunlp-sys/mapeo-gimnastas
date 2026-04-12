@@ -181,7 +181,15 @@ window.EVAL_LEVEL_DETAILS = {
   'USAG1': {
     label: 'USAG Nivel 1',
     aparatos: {
-      'SALTO': { baseScore: 10.00, elements: [{ name: 'Stretch Jump to Mat', value: 10.00, deductions: [] }] },
+      'SALTO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Stretch Jump to Mat', value: 10.00, deductions: [
+            { id: 'u1v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 },
+            { id: 'u1v2', text: 'Falta de extensión', val: 0.10 }
+          ]}
+        ] 
+      },
       'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Pullover', value: 5.00, deductions: [] }, { name: 'Cast', value: 5.00, deductions: [] }] },
       'VIGA': { baseScore: 10.00, elements: [{ name: 'Scales', value: 5.00, deductions: [] }, { name: 'Jumps', value: 5.00, deductions: [] }] },
       'SUELO': { baseScore: 10.00, elements: [{ name: 'Forward Roll', value: 5.00, deductions: [] }, { name: 'Cartwheel', value: 5.00, deductions: [] }] }
@@ -190,7 +198,14 @@ window.EVAL_LEVEL_DETAILS = {
   'USAG2': {
     label: 'USAG Nivel 2',
     aparatos: {
-      'SALTO': { baseScore: 10.00, elements: [{ name: 'Jump to Handstand', value: 10.00, deductions: [] }] },
+      'SALTO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Jump to Handstand', value: 10.00, deductions: [
+            { id: 'u2v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 }
+          ]}
+        ] 
+      },
       'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Back Hip Circle', value: 5.00, deductions: [] }, { name: 'Leg Cut', value: 5.00, deductions: [] }] },
       'VIGA': { baseScore: 10.00, elements: [{ name: '1/2 Turn', value: 5.00, deductions: [] }, { name: 'Leap 60°', value: 5.00, deductions: [] }] },
       'SUELO': { baseScore: 10.00, elements: [{ name: 'Round-off', value: 5.00, deductions: [] }, { name: 'Bridge', value: 5.00, deductions: [] }] }
@@ -199,12 +214,113 @@ window.EVAL_LEVEL_DETAILS = {
   'USAG3': {
     label: 'USAG Nivel 3',
     aparatos: {
-      'SALTO': { baseScore: 10.00, elements: [{ name: 'Handstand Flat Back', value: 10.00, deductions: [] }] },
+      'SALTO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Handstand Flat Back', value: 10.00, deductions: [
+            { id: 'u3v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 }
+          ]}
+        ] 
+      },
       'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Front Hip Circle', value: 5.00, deductions: [] }, { name: 'Underswing', value: 5.00, deductions: [] }] },
       'VIGA': { baseScore: 10.00, elements: [{ name: 'Handstand', value: 5.00, deductions: [] }, { name: 'Cartwheel', value: 5.00, deductions: [] }] },
       'SUELO': { baseScore: 10.00, elements: [{ name: 'Handspring', value: 5.00, deductions: [] }, { name: 'Split Leap 90°', value: 5.00, deductions: [] }] }
     }
+  },
+  'USAG4': {
+    label: 'USAG Nivel 4',
+    aparatos: {
+      'SALTO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Handspring over Vault Table', value: 10.00, deductions: [
+            { id: 'u4v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 },
+            { id: 'u4v2', text: 'Falta de inversión (ángulo)', val: 0.30 },
+            { id: 'u4v3', text: 'Brazos flexionados', val: 0.30 },
+            { id: 'u4v4', text: 'Falta de fase de vuelo II', val: 0.50 }
+          ]}
+        ] 
+      },
+      'PARALELAS': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Glide Kip', value: 2.00, deductions: [{ id: 'u4p1', text: 'Falta de extensión', val: 0.20 }] },
+          { name: 'Cast to Horizontal', value: 1.50, deductions: [{ id: 'u4p2', text: 'Ángulo por debajo horizontal', val: 0.30 }] },
+          { name: 'Squat-on / Pike-on', value: 1.50, deductions: [] },
+          { name: 'Long Hang Kip', value: 2.00, deductions: [] },
+          { name: 'Back Hip Circle', value: 1.50, deductions: [] },
+          { name: 'Tap Swing with 180° turn dismount', value: 1.50, deductions: [] }
+        ] 
+      },
+      'VIGA': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Cartwheel', value: 2.00, deductions: [] },
+          { name: 'Handstand (2")', value: 2.00, deductions: [] },
+          { name: 'Split Leap / Jump (120°)', value: 2.00, deductions: [] },
+          { name: '1/2 Turn in Passé', value: 1.50, deductions: [] },
+          { name: 'Scale (above horizontal)', value: 1.00, deductions: [] },
+          { name: 'Dismount: Cartwheel to Side HS 1/4 Turn', value: 1.50, deductions: [] }
+        ] 
+      },
+      'SUELO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Back Walkover', value: 1.50, deductions: [] },
+          { name: 'Back Extension Roll', value: 1.50, deductions: [] },
+          { name: 'Front Handspring Step-out', value: 2.00, deductions: [] },
+          { name: 'Split Leap / Straddle Jump (120°)', value: 2.00, deductions: [] },
+          { name: '1/1 Turn in Passé', value: 1.00, deductions: [] },
+          { name: 'Round-off BHS BHS', value: 2.00, deductions: [] }
+        ] 
+      }
+    }
+  },
+  'USAG5': {
+    label: 'USAG Nivel 5',
+    aparatos: {
+      'SALTO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Handspring over Vault Table', value: 10.00, deductions: [
+            { id: 'u5v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 },
+            { id: 'u5v2', text: 'Cuerpo carpado/arqueado', val: 0.20 }
+          ]}
+        ] 
+      },
+      'PARALELAS': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Glide Kip', value: 1.50, deductions: [] },
+          { name: 'Cast above Horizontal', value: 1.50, deductions: [{ id: 'u5p1', text: 'No alcanzar ángulo', val: 0.30 }] },
+          { name: 'Clear Hip Circle', value: 2.50, deductions: [{ id: 'u5p2', text: 'No alcanzar horizontal', val: 0.40 }] },
+          { name: 'Long Hang Kip', value: 1.50, deductions: [] },
+          { name: 'Dismount: Flyaway (Tuck/Layout)', value: 3.00, deductions: [] }
+        ] 
+      },
+      'VIGA': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Acro Series (BWO/BHS)', value: 2.50, deductions: [] },
+          { name: 'Split Jump / Sissonne (150°)', value: 2.00, deductions: [] },
+          { name: 'Full Turn in Passé', value: 2.00, deductions: [] },
+          { name: 'Scales / Poses', value: 1.50, deductions: [] },
+          { name: 'Dismount: Back Tuck', value: 2.00, deductions: [] }
+        ] 
+      },
+      'SUELO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'RO BHS Back Tuck', value: 3.00, deductions: [] },
+          { name: 'Front Handspring series', value: 2.50, deductions: [] },
+          { name: 'Dance Passage (150° leap)', value: 2.50, deductions: [] },
+          { name: 'Full Turn in Passé', value: 2.00, deductions: [] }
+        ] 
+      }
+    }
   }
+
+
 };
 
 window.GLOBAL_DEDUCTIONS = {
