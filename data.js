@@ -1,288 +1,237 @@
 // =====================================================
-// ELEMENTOS POR NIVEL - Extraídos de programas CAG 2026 y USAG 2021-2029
+// ELEMENTOS OBLIGATORIOS POR NIVEL Y APARATO
+// EXTRAÍDOS DIRECTAMENTE DE:
+// - PROGRAMA NIVEL E 2026 - CAG
+// - USAG 2021-2029
 // =====================================================
+
 window.LEVEL_DATA = {
 
+  // ---------------------------------------------------
+  // CAG - NIVEL E1 B (Sólo Suelo y Salto)
+  // ---------------------------------------------------
   'E1B': {
     label: 'E1B — CAG',
     color: '#3d9970',
     aparatos: {
       'SALTO': [
-        'Salto en extensión / caída dorsal',
-        'Vertical caída dorsal'
+        'Salto en extensión hacia colchones (Única opción)'
       ],
       'SUELO': [
-        'Rol adelante (piernas juntas)',
-        'Rol atrás (piernas juntas)',
-        'Vertical (parada de manos) con apoyo',
-        'Puente básico',
-        'Arabesque (estático)',
-        'Passé en relevé',
-        'Relevé y caminar en relevé',
-        'Giro en un pie (½ vuelta)',
-        'Salto en extensión en suelo',
-        'Saut de chat (salto carpado)',
-        'Expresión corporal / coreografía'
+        'Enlace Coreográfico',
+        'Passé con una pierna',
+        'Passé con la otra pierna (al frente)',
+        'Dos pasos en relevé',
+        'Rol adelante agrupado',
+        'Salto en extensión (continuado del rol)',
+        'Salto Gato',
+        'Vertical',
+        'Cuclillas (mantener 1")',
+        'Vela',
+        'Sapo'
       ]
     }
   },
 
+  // ---------------------------------------------------
+  // CAG - NIVEL E1 A (4 Aparatos)
+  // ---------------------------------------------------
   'E1A': {
     label: 'E1A — CAG',
     color: '#2196f3',
     aparatos: {
       'SALTO': [
-        'Vuelo frontal / caída dorsal',
-        'Salto en extensión sobre tarima'
+        'Salto en extensión hacia colchones (Única opción)'
       ],
-      'PARALELAS (BARRAS ASIMÉTRICAS)': [
-        'Entrada al apoyo desde impulso',
-        'Balanceo adelante y atrás',
-        'Colgamiento en barra baja',
-        'Cambio de barra (colgamiento)',
-        'Círculo de cadera atrás (kip básico)',
-        'Pasaje de barra baja a barra alta',
-        'Salida: saltada con caída al suelo'
+      'PARALELAS': [
+        'Entrada: Salto al Apoyo',
+        'Flotante',
+        'Media vuelta adelante brazos flexionados - Descenso',
+        'Posición de escuadra colgada (mantener 2")'
       ],
       'VIGA': [
-        'Entrada a la viga (salto o apoyo)',
-        'Arabesque (estático)',
-        'Passé en relevé',
-        'Salto en viga (extensión o carpado)',
-        'Giro en 1 pie (½ vuelta)',
-        'Desplazamientos en relevé',
-        'Salida: salto extensión o rondada'
+        'Entrada a horcajadas, cuclillas y posición de pie',
+        'Passé con una pierna',
+        'Passé con la otra',
+        'Dos pasos en relevé',
+        'Salto en extensión',
+        'Cuclillas y vuelta a posición de pie',
+        'Salida: Salto en extensión (desde el extremo)'
       ],
       'SUELO': [
-        'Rol adelante con piernas juntas',
-        'Rol atrás con piernas juntas',
-        'Vertical (parada de manos)',
-        'Medialuna',
-        'Arabesque',
-        'Passé en relevé',
-        'Relevé y desplazamiento',
-        'Giro en un pie (½ vuelta)',
-        'Salto en extensión',
-        'Saut de chat (salto carpado)',
-        'Expresión corporal / coreografía'
+        'Enlace Coreográfico',
+        'Passé con una pierna',
+        'Passé con la otra pierna (al frente)',
+        'Dos pasos en relevé',
+        'Rol adelante agrupado',
+        'Salto en extensión (continuado del rol)',
+        'Salto Gato',
+        'Vertical',
+        'Cuclillas (mantener 1")',
+        'Vela',
+        'Sapo'
       ]
     }
   },
 
+  // ---------------------------------------------------
+  // CAG - NIVEL E2
+  // ---------------------------------------------------
   'E2': {
     label: 'E2 — CAG',
     color: '#9c27b0',
     aparatos: {
       'SALTO': [
-        'Vertical caída dorsal (sobre tarima elevada)',
-        'Salto de manos sobre tarima'
+        // La altura de los colchones varía según categoría, pero son ambos saltos (valor 5.00 y 5.00 c/u)
+        'Salto en extensión hacia colchones',
+        'Vertical caída dorsal sobre el colchón'
       ],
-      'PARALELAS (BARRAS ASIMÉTRICAS)': [
-        'Entrada: impulso y giro',
-        'Cast (extensión de cadera)',
-        'Balanceo en barra alta',
-        'Kip básico (círculo de cadera)',
-        'Pirueta ½ vuelta',
-        'Salida: saltada con ½ giro'
+      'PARALELAS': [
+        'Entrada salto al apoyo',
+        'Flotante',
+        'Pasaje de pierna, toma palmar (2 segundos)',
+        'Flotante atrás a posición de pie',
+        'Posición de escuadra colgada (2 segundos)'
       ],
       'VIGA': [
-        'Entrada: salto con apoyo de manos',
-        'Arabesque (equilibrio)',
-        'Passé en relevé',
-        'Salto de split (jeté)',
-        'Giro en un pie (½ vuelta)',
-        'Elementos de libre elección de serie',
-        'Salida: rondada o salto'
+        'Entrada a horcajada, cuclillas y de pie',
+        'Salto Gato',
+        'Battement al frente con una pierna',
+        'Arabesca 30º',
+        'Passé con una pierna, Passé con la otra',
+        'Enlace Coreográfico',
+        '1/4 de giro sobre dos pies',
+        'Salida: Salto en extensión por el lateral'
       ],
       'SUELO': [
-        'Rol adelante con piernas juntas',
-        'Rol atrás con piernas juntas',
-        'Vertical / Vertical-rol',
+        'Enlace Coreográfico',
+        'Dos (2) 1/2 giros (180º) sobre dos pies',
+        'Passé - Developpe',
+        'Passé - Developpe (con la otra pierna)',
+        'Salto Gato',
+        'Vertical',
+        'Rol adelante agrupado',
         'Medialuna',
-        'Rondo (rondada)',
-        'Arabesque',
-        'Passé en relevé con giro',
-        'Giro en un pie (1 vuelta)',
-        'Salto de split (jeté)',
-        'Saut de chat',
-        'Expresión corporal / coreografía'
+        'Arabesca (30º)',
+        'Cuclillas',
+        'Vela',
+        'Sapo'
       ]
     }
   },
 
+  // ---------------------------------------------------
+  // CAG - NIVEL E3
+  // ---------------------------------------------------
   'E3': {
     label: 'E3 — CAG',
     color: '#e91e63',
     aparatos: {
       'SALTO': [
-        'Vertical caída dorsal (E3 Pre-Mini)',
-        'Vuelo-mortero (E3 Mini en adelante)',
-        'Salto de manos con vuelo'
+        'Vuelo Mortero - Recepción acostada sobre colchones'
       ],
-      'PARALELAS (BARRAS ASIMÉTRICAS)': [
-        'Cast al horizontal',
-        'Kip (círculo de cadera adelante)',
-        'Balanceo y pirueta',
-        'Vuelta libre (back hip circle)',
-        'Elementos de libre elección',
-        'Salida: saltada o con giro'
+      'PARALELAS': [
+        'Vuelta Pajarito',
+        'Flotante al apoyo',
+        'Vuelta atrás',
+        'Pasaje de pierna toma palmar (2 seg)',
+        'Piso-Piso (colocación de ambos pies en barra), cuclillas, salida de salto extendido'
       ],
       'VIGA': [
-        'Entrada con dificultad elegida',
-        'Arabesque (equilibrio libre)',
-        'Passé en relevé con giro completo',
-        'Salto de split o jeté',
-        'Giro en un pie (1 vuelta completa)',
-        'Acrobacia en viga (rueda o voltereta)',
-        'Salida: rondada o salto con giro'
+        'Entrada a horcajada, escuadra y posición de pie',
+        'Salto Gato',
+        'Battement de pierna al frente',
+        'Paloma (horizontal)',
+        'Vertical 30º',
+        'Dos (2) 1/2 giros (180º) sobre dos pies',
+        'Enlace Coreográfico',
+        'Salida: Salto en extensión'
       ],
       'SUELO': [
-        'Rol adelante / rol extensión',
-        'Rol atrás / rol extensión atrás',
-        'Vertical libre (sin apoyo)',
+        'Enlace Coreográfico',
+        '1/2 giro en passé sobre 1 pie',
+        '1/2 giro en passe sobre 2 pies',
+        'Jette a dos piernas (90º)',
+        'Salto en Extensión',
         'Medialuna',
-        'Rondo (rondada)',
-        'Flic-flac (según categoría)',
-        'Arabesque libre',
-        'Passé en relevé con giro',
-        'Giro en un pie (1+ vuelta)',
-        'Salto de split',
-        'Saut de chat',
-        'Expresión corporal / coreografía'
+        'Vertical Rol',
+        'Salto en extensión con 1/2 giro',
+        'Rol atrás agrupado o extendido',
+        'Rondo',
+        'Salto en extensión',
+        'Enlace Coreográfico (final)'
       ]
     }
   },
 
+
+  // ---------------------------------------------------
+  // USAG NIVEL 1 B y 1 A
+  // ---------------------------------------------------
   'USAG1B': {
-    label: 'USAG Nivel 1B',
+    label: 'Prog. 1 y 2 USA', // Simplified entry level representation
     color: '#ff9800',
     aparatos: {
       'SALTO': [
-        'Salto extendido + parada de manos + caída dorsal'
-      ],
-      'SUELO': [
-        'Rol adelante con piernas juntas',
-        'Rol atrás con piernas juntas',
-        'Vertical (mínimo 1 segundo)',
-        'Puente y pie a pie (prep. backbend)',
-        'Arabesque (mínimo 1 segundo)',
-        'Passé en relevé con ½ giro',
-        'Giro en un pie (½ vuelta)',
         'Salto en extensión',
-        'Saut de chat (salto carpado)',
-        'Expresión corporal / coreografía'
-      ]
-    }
-  },
-
-  'USAG1A': {
-    label: 'USAG Nivel 1A',
-    color: '#ff5722',
-    aparatos: {
-      'BARRAS ASIMÉTRICAS': [
-        'Entrada: impulso y colgamiento',
-        'Balanceo adelante y atrás',
-        'Círculo de cadera atrás (back hip circle)',
-        'Cast (extensión de cadera)',
-        'Pasaje entre barras',
-        'Salida: saltada de barra alta'
+        'Vertical caída dorsal'
+      ],
+      'PARALELAS': [
+        'Pullover (entrada)',
+        'Vuelta pajarito (Cast)',
+        'Vuelta atrás (Back hip circle)',
+        'Salida balanceada (Underswing)'
       ],
       'VIGA': [
-        'Entrada a la viga',
-        'Arabesque (mínimo 1 segundo)',
-        'Passé en relevé',
-        'Salto en viga',
-        'Giro en 1 pie (½ vuelta)',
-        'Desplazamientos en relevé',
-        'Salida: salto extensión o rondada'
+        'Entrada al apoyo',
+        'Arabesca (30°)',
+        'Salto de extensión',
+        'Medialuna a vertical lateral a posición de pie (salida)'
+      ],
+      'SUELO': [
+        'Vertical',
+        'Medialuna',
+        'Rol atrás',
+        'Rol adelante'
       ]
     }
   },
 
   'USAG2': {
-    label: 'USAG Nivel 2',
-    color: '#00bcd4',
+    label: 'Prog. 3 USA',
+    color: '#ff5722',
     aparatos: {
       'SALTO': [
-        'Salto a parada de manos sobre superficie elevada + caída dorsal'
+        'Vertical caída dorsal (mayor altura)'
       ],
-      'BARRAS ASIMÉTRICAS': [
-        'Entrada: kip o círculo de cadera',
-        'Cast al horizontal',
-        'Círculo de cadera atrás (back hip circle)',
-        'Pirueta ½ vuelta en barra alta',
-        'Pasaje entre barras (baja a alta)',
-        'Salida: saltada con ½ giro'
+      'PARALELAS': [
+        'Pullover',
+        'Vuelta pajarito (cast) al horizontal',
+        'Vuelta atrás (back hip circle)',
+        'Salida de underswing'
       ],
       'VIGA': [
-        'Entrada con salto',
-        'Arabesque libre (mínimo 1 seg.)',
-        'Passé en relevé con ½ giro',
-        'Salto de split (jeté)',
-        'Giro en 1 pie (½ vuelta)',
-        'Acrobacia de libre elección',
-        'Salida: rondada o salto'
+        'Salto extensión',
+        'Pivotes (1/2 giros)',
+        'Arabesca 45°',
+        'Salida de medialuna o vertical lateral'
       ],
       'SUELO': [
-        'Rol adelante con extensión',
-        'Rol atrás con extensión',
-        'Vertical libre',
-        'Medialuna',
-        'Rondo (rondada)',
-        'Arabesque libre',
-        'Passé en relevé con giro',
-        'Giro en un pie (½ vuelta)',
-        'Salto de split (jeté)',
-        'Saut de chat',
-        'Expresión corporal / coreografía'
-      ]
-    }
-  },
-
-  'USAG3': {
-    label: 'USAG Nivel 3',
-    color: '#f44336',
-    aparatos: {
-      'SALTO': [
-        'Mortero (tsukahara) sobre superficie elevada + caída dorsal'
-      ],
-      'BARRAS ASIMÉTRICAS': [
-        'Kip (entrada estándar)',
-        'Cast al horizontal o vertical',
-        'Círculo de cadera atrás libre',
-        'Solo en barra alta (mínimo 1 elemento)',
-        'Pirueta completa (pirouette)',
-        'Vuelo (release) entre barras',
-        'Salida: doble o con giro'
-      ],
-      'VIGA': [
-        'Entrada de dificultad elegida',
-        'Arabesque con giro libre',
-        'Passé en relevé con giro completo',
-        'Salto de split o salto con giro',
-        'Giro en 1 pie (1 vuelta completa)',
-        'Elemento acrobático en viga',
-        'Salida: rondada + flic o similar'
-      ],
-      'SUELO': [
-        'Acrobacia adelante (serie de 2+)',
-        'Acrobacia atrás (rondo + flic-flac)',
-        'Vertical libre con cambio de pierna',
-        'Medialuna y variantes',
-        'Arabesque libre',
-        'Passé en relevé con giro completo',
-        'Giro en un pie (1+ vuelta)',
-        'Salto de split y saut de chat',
-        'Expresión corporal / coreografía'
+        'Flic-flac asistido o rolido',
+        'Medialuna paso a paso',
+        'Split de piernas',
+        'Giro en un pie'
       ]
     }
   }
+
 };
 
+// PREDISPOSICIONES Y ETIQUETAS
 window.PRED_LABELS = {
   '1': { text: '🏆 Competitiva comprometida', cls: 'pm1' },
   '2': { text: '⭐ Competitiva en desarrollo', cls: 'pm2' },
   '3': { text: '💪 Deportiva sin competencia', cls: 'pm3' },
   '4': { text: '🌸 Recreativa', cls: 'pm4' },
-  '5': { text: '👪 Asistencial', cls: 'pm5' }
+  '5': { text: '👪 Asistencial', cls: 'pm5' },
 };
