@@ -76,6 +76,7 @@ document.addEventListener('DOMContentLoaded', () => {
         // Event Listeners
         dom.name.addEventListener('input', e => currentState.gymnastName = e.target.value);
         dom.birthDate.addEventListener('change', updateCategory);
+        dom.birthDate.addEventListener('input', updateCategory);
         dom.levelSelect.addEventListener('change', updateApparatusOptions);
         dom.apparatusSelect.addEventListener('change', startEvaluation);
         
@@ -119,9 +120,12 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        const birthDate = new Date(dom.birthDate.value);
-        const currentYear = 2026; // Usamos 2026 según reglamento
-        const age = currentYear - birthDate.getFullYear();
+        const parts = dom.birthDate.value.split('-');
+        if (parts.length !== 3) return;
+        
+        const birthYear = parseInt(parts[0]);
+        const currentYear = 2026; 
+        const age = currentYear - birthYear;
         
         const constants = window.EVAL_CONSTANTS || {};
         const categories = constants.CATEGORIES || [];
@@ -129,8 +133,7 @@ document.addEventListener('DOMContentLoaded', () => {
         
         currentState.birthDate = dom.birthDate.value;
         currentState.age = age;
-        currentState.birthYear = birthDate.getFullYear();
-
+        currentState.birthYear = birthYear;
         dom.ageLabel.textContent = `${age} años`;
         
         if(cat) {
@@ -138,24 +141,21 @@ document.addEventListener('DOMContentLoaded', () => {
             dom.categoryLabel.textContent = cat.name;
             dom.categoryLabel.className = 'badge-status status-active';
         } else {
-            dom.categoryLabel.textContent = age < 6 ? 'Muy pequeña' : 'Fuera de Rango';
+            currentState.category = '';
+            dom.categoryLabel.textContent = age < 6 ? 'Diferenciada (Sub-6)' : 'Fuera de Rango';
             dom.categoryLabel.className = 'badge-status status-warning';
         }
     }
 
     function updateApparatusOptions() {
         const level = dom.levelSelect.value;
+        console.log("Nivel seleccionado:", level);
         currentState.level = level;
         
-        const levelDetails = window.EVAL_LEVEL_DETAILS || {};
-        const levelData = levelDetails[level];
-        
-        // Reset apparatus selection
         dom.apparatusSelect.value = "";
         currentState.apparatus = "";
         hideEvaluation();
 
-        // Level-specific apparatus filtering (e.g. E1B only VT/FX)
         if(level === 'E1B') {
             Array.from(dom.apparatusSelect.options).forEach(opt => {
                 if(opt.value && opt.value !== 'SALTO' && opt.value !== 'SUELO') {
@@ -173,7 +173,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const level = dom.levelSelect.value;
         const app = dom.apparatusSelect.value;
         
+        console.log("startEvaluation triggered with:", { level, app });
+
         if(!level || !app) {
+            console.warn("Faltan datos para iniciar: Nivel o Aparato vacíos.");
             hideEvaluation();
             return;
         }
@@ -187,14 +190,30 @@ document.addEventListener('DOMContentLoaded', () => {
         currentState.vaultRuns = 0;
 
         renderEvaluation();
-        dom.evalArea.classList.remove('hidden');
-        dom.startPrompt.classList.add('hidden');
+        
+        console.log("Mostrando área de evaluación...");
+        if (dom.evalArea) {
+            dom.evalArea.classList.remove('hidden');
+            dom.evalArea.style.display = 'block'; // Force display if hidden class fails
+        }
+        if (dom.startPrompt) {
+            dom.startPrompt.classList.add('hidden');
+            dom.startPrompt.style.display = 'none';
+        }
+        
         calculateScore();
     }
 
     function hideEvaluation() {
-        dom.evalArea.classList.add('hidden');
-        dom.startPrompt.classList.remove('hidden');
+        console.log("Ocultando área de evaluación.");
+        if (dom.evalArea) {
+            dom.evalArea.classList.add('hidden');
+            dom.evalArea.style.display = 'none';
+        }
+        if (dom.startPrompt) {
+            dom.startPrompt.classList.remove('hidden');
+            dom.startPrompt.style.display = 'flex';
+        }
     }
 
     function renderEvaluation() {
@@ -204,23 +223,20 @@ document.addEventListener('DOMContentLoaded', () => {
         const levelData = levelDetails[currentState.level];
         
         if(!levelData || !levelData.aparatos) {
-            console.error("Nivel o aparatos no encontrados para:", currentState.level);
+            console.warn("Faltan datos para el nivel:", currentState.level);
             return;
         }
 
         const appData = levelData.aparatos[currentState.apparatus];
         
-        if(!appData) {
-            alert("Aparato no disponible para este nivel.");
+        if(!appData || !appData.elements) {
+            alert("Información técnica no disponible para este aparato en " + levelData.label);
             hideEvaluation();
             return;
         }
 
-        // Header
-        dom.evalTitle.textContent = `Evaluación Técnica - ${currentState.apparatus} (${currentState.level})`;
-        
         // Start Value
-        currentState.startValue = appData.baseScore;
+        currentState.startValue = appData.baseScore || 10.0;
 
         // Vault Area
         if(currentState.apparatus === 'SALTO') {
