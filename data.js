@@ -94,14 +94,14 @@ window.LEVEL_DATA = {
         'Posición de escuadra colgada (2 segundos)'
       ],
       'VIGA': [
-        'Entrada a horcajada, cuclillas y de pie',
+        'Entrada a horcajada, cuclillas y posición de pie',
         'Salto Gato',
         'Battement al frente con una pierna',
-        'Arabesca 30º',
-        'Passé con una pierna, Passé con la otra',
+        'Arabesque con la otra pierna (30º)',
+        'Passé con una pierna y Passé con la otra',
         'Enlace Coreográfico',
-        '1/4 de giro sobre dos pies',
-        'Salida: Salto en extensión por el lateral'
+        '1/4 giro sobre dos pies',
+        'Salida: Salto en extensión'
       ],
       'SUELO': [
         'Enlace Coreográfico',
