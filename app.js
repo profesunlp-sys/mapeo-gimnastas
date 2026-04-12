@@ -36,6 +36,7 @@ window.setElemState = setElemState;
 window.saveGymnast = saveGymnast;
 window.deleteGymnast = deleteGymnast;
 window.exportExcel = exportExcel;
+window.exportCSV = exportCSV;
 window.renderView = renderView;
 
 // ─── INIT ──────────────────────────────────────────
@@ -698,6 +699,45 @@ function exportExcel() {
   XLSX.writeFile(wb, `mapeo_gimnastas_${teacher.replace(/\s+/g,'_')}_${dateStr}.xlsx`);
   
   showToast('✓ Excel (.xlsx) exportado correctamente.');
+}
+
+function exportCSV() {
+  if (gymnasts.length === 0) { showToast('No hay datos para exportar.', true); return; }
+  const teacher = document.getElementById('teacherName').value || 'Sin_Nombre';
+  const dateStr = document.getElementById('evalDate').value || new Date().toISOString().split('T')[0];
+
+  const headers = ['Nombre','Nivel','Años_Actividad','Grupo_Dias','Profesor','Horario','Total_Clases','Clases_Asistidas','Pct_Asistencia',
+    'Comprende_Consignas','Incorpora_Rapido','Predisposicion','Flexibilidad','Fuerza_Brazos','Fuerza_Tronco','Coordinacion',
+    'Elementos_Adquiridos','Elementos_Trabajo','Dudas','Observaciones','Fecha_Evaluacion'];
+
+  const rows = gymnasts.map(g => {
+    const pred = PRED_LABELS[g.predisposicion];
+    const attPercent = calcAtt(g.totalClases, g.asistio);
+    const lvl = LEVEL_DATA[g.level] ? LEVEL_DATA[g.level].label : (g.level || '');
+    const adq = Object.values(g.elements || {}).filter(v => v === 'adq').length;
+    const trab = Object.values(g.elements || {}).filter(v => v === 'trab').length;
+    
+    const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
+    
+    return [
+      g.name, lvl, g.years || '', gr ? gr.days : (g.days || ''), gr ? gr.teacher : '', gr ? gr.time : '',
+      g.totalClases || '', g.asistio || '', attPercent !== '—' ? attPercent + '%' : '',
+      g.comprende || '', g.incorpora || '', pred ? pred.text.replace(/[🏆⭐💪🌸👪]/g,'').trim() : '',
+      g.flex || '', g.fuerzaBrazos || '', g.fuerzaTronco || '', g.coordinacion || '',
+      adq, trab, (g.dudas || '').replace(/\n/g,' '), (g.obs || '').replace(/\n/g,' '), dateStr
+    ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
+  });
+
+  const bom = '\uFEFF';
+  const csv = bom + 'sep=,\n' + headers.join(',') + '\n' + rows.join('\n');
+  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `mapeo_gimnastas_${teacher.replace(/\s+/g,'_')}_${dateStr}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  showToast('✓ CSV (Formato IA) exportado correctamente.');
 }
 
 // ─── TOAST ─────────────────────────────────────────

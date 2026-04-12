@@ -36,7 +36,14 @@
           <label>Fecha</label>
           <input type="date" id="evalDate" />
         </div>
-        <button class="btn-export" id="btnExport" onclick="exportExcel()">⬇ Exportar Excel</button>
+        
+        <div class="export-menu">
+          <button class="btn-export" id="btnExportMain">⬇ Descargar Datos</button>
+          <div class="export-options">
+            <button onclick="exportExcel()">📊 Formato Excel (.xlsx)</button>
+            <button onclick="exportCSV()">📜 Formato IA / Datos (.csv)</button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
