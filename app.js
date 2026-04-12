@@ -65,6 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     // Ordenar por nombre
     gymnasts.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
+    
+    // Poblar filtro de grupos si está vacío
+    const fg = document.getElementById('filterGroup');
+    if (fg && fg.options.length <= 1) {
+        window.CLUB_GROUPS.forEach(gr => {
+            const opt = document.createElement('option');
+            opt.value = gr.id;
+            opt.textContent = `${gr.days} - ${gr.teacher}`;
+            fg.appendChild(opt);
+        });
+    }
+    
     renderView();
     updateStats();
   }, (error) => {
@@ -90,10 +102,13 @@ function updateFABVisibility() {
 function getFiltered() {
   const fl = document.getElementById('filterLevel').value;
   const fp = document.getElementById('filterPred').value;
+  const fg = document.getElementById('filterGroup').value;
   const fn = document.getElementById('filterName').value.toLowerCase();
+  
   return gymnasts.filter(g => {
     if (fl && g.level !== fl) return false;
     if (fp && g.predisposicion !== fp) return false;
+    if (fg && g.groupId !== fg) return false;
     if (fn && !g.name.toLowerCase().includes(fn)) return false;
     return true;
   });

@@ -72,6 +72,10 @@
         <option value="USAG3">USAG 3</option>
         <option value="Recreativo">Recreativo</option>
       </select>
+      <select id="filterGroup" onchange="renderView()" aria-label="Filtrar por grupo/profesor">
+        <option value="">Todos los Grupos / Profesores</option>
+        <!-- Se llena dinámicamente -->
+      </select>
       <select id="filterPred" onchange="renderView()" aria-label="Filtrar por predisposición">
         <option value="">Todas</option>
         <option value="1">🏆 Comp. comprometida</option>
