@@ -561,15 +561,22 @@ async function saveGymnast() {
   if (!name) { showToast('Por favor escribí el nombre de la gimnasta.', true); return; }
 
   const pred = document.querySelector('input[name="pred"]:checked');
-  const classGroup = window.CLUB_GROUPS.find(gr => gr.id === document.getElementById('fGroup')?.value) || null;
+  const groupId = document.getElementById('fGroup')?.value || null;
+  const classGroup = window.CLUB_GROUPS.find(gr => gr.id === groupId) || null;
   
+  // Seguridad: si el campo totalClases quedó vacío (placeholder "Calculado") lo calculamos ahora
+  let totalClases = document.getElementById('fTotalClases').value;
+  if (!totalClases && groupId) {
+    totalClases = calculateExpectedClasses(groupId);
+  }
+
   const g = {
     name,
-    groupId: classGroup ? classGroup.id : null,
+    groupId: groupId,
     years: document.getElementById('fYears').value,
-    days: classGroup ? classGroup.days : '', // Fallback for backwards compat
-    totalClases: document.getElementById('fTotalClases').value,
-    asistio: document.getElementById('fAsistio').value,
+    days: classGroup ? classGroup.days : '', 
+    totalClases: totalClases || "0",
+    asistio: document.getElementById('fAsistio').value || "0",
     level: document.getElementById('fLevel').value,
     comprende: formState.comprende || null,
     incorpora: formState.incorpora || null,
