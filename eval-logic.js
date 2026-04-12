@@ -210,18 +210,21 @@ document.addEventListener('DOMContentLoaded', () => {
         appData.elements.forEach((elem, index) => {
             const tr = document.createElement('tr');
             
-            // Checkboxes for deductions
+            // Segmented Deductions for elements
             let techDedsHtml = '';
             if(elem.deductions && elem.deductions.length > 0) {
                 techDedsHtml = `<div class="deduction-list">`;
                 elem.deductions.forEach((d, dIdx) => {
                     const id = `ded-elem-${index}-${dIdx}`;
                     techDedsHtml += `
-                        <label class="ded-check" for="${id}">
-                            <input type="checkbox" id="${id}" data-type="elem" data-elem="${index}" data-val="${d.val}">
-                            <span>${d.text}</span>
-                            <span class="ded-val">-${d.val.toFixed(2)}</span>
-                        </label>
+                        <div class="deduction-item">
+                            <div class="deduction-info">
+                                <span>${d.text}</span>
+                            </div>
+                            <div class="ded-segments" data-id="${id}" data-type="elem" data-elem="${index}">
+                                ${generateSegments(d.val)}
+                            </div>
+                        </div>
                     `;
                 });
                 techDedsHtml += `</div>`;
@@ -264,15 +267,32 @@ document.addEventListener('DOMContentLoaded', () => {
         data.forEach((d, idx) => {
             const id = `ded-${type}-${idx}`;
             const div = document.createElement('div');
+            div.className = 'deduction-item';
             div.innerHTML = `
-                <label class="ded-check" for="${id}">
-                    <input type="checkbox" id="${id}" data-type="${type}" data-idx="${idx}" data-val="${d.val}">
+                <div class="deduction-info">
                     <span>${d.text}</span>
-                    <span class="ded-val">-${d.val.toFixed(2)}</span>
-                </label>
+                </div>
+                <div class="ded-segments" data-id="${id}" data-type="${type}" data-idx="${idx}">
+                    ${generateSegments(d.val)}
+                </div>
             `;
             container.appendChild(div);
         });
+    }
+
+    function generateSegments(maxVal) {
+        let html = '';
+        // Special case: if val is very small (0.05), just show 0.05
+        if (maxVal < 0.10) {
+            return `<button class="btn-segment is-max" data-val="${maxVal}">${maxVal.toFixed(2)}</button>`;
+        }
+        
+        // Typical increments of 0.1
+        for (let v = 0.1; v <= maxVal + 0.01; v += 0.1) {
+            const isMax = Math.abs(v - maxVal) < 0.01;
+            html += `<button class="btn-segment ${isMax ? 'is-max' : ''}" data-val="${v.toFixed(2)}">${v.toFixed(1)}</button>`;
+        }
+        return html;
     }
 
     function setupListeners() {
@@ -292,9 +312,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Any Checkbox change
-        document.querySelectorAll('input[type="checkbox"]').forEach(ck => {
-            ck.addEventListener('change', calculateScore);
+        // Segmented buttons click
+        document.querySelectorAll('.btn-segment').forEach(btn => {
+            btn.addEventListener('click', e => {
+                const group = e.target.parentElement;
+                const wasActive = e.target.classList.contains('active');
+                
+                // Remove active from peers in the same segment group
+                Array.from(group.children).forEach(b => b.classList.remove('active'));
+                
+                // Toggle current if it wasn't already active
+                if(!wasActive) {
+                    e.target.classList.add('active');
+                }
+                
+                calculateScore();
+            });
         });
     }
 
@@ -316,15 +349,12 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // 2. Element Technical Deductions
-        document.querySelectorAll('input[data-type="elem"]:checked').forEach(ck => {
-            deductions += parseFloat(ck.dataset.val);
+        // 2. Technical Deductions (Segment buttons)
+        document.querySelectorAll('.btn-segment.active').forEach(btn => {
+            deductions += parseFloat(btn.dataset.val);
         });
 
-        // 3. Execution & Landing
-        document.querySelectorAll('input[data-type="exec"]:checked, input[data-type="land"]:checked').forEach(ck => {
-            deductions += parseFloat(ck.dataset.val);
-        });
+        // 3. (Reserved for other future fixed deductions if needed)
 
         // 4. Falls (0.50 ea)
         deductions += (currentState.falls * 0.50);

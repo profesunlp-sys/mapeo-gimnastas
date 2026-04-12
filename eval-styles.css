@@ -296,6 +296,69 @@ input:focus, select:focus, textarea:focus {
 .ded-check input { width: 1.15rem; height: 1.15rem; cursor: pointer; }
 .ded-val { font-weight: 700; color: var(--danger); font-size: 0.75rem; }
 
+/* Segmented Deductions */
+.deduction-item {
+    background: white;
+    padding: 0.75rem 1rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.deduction-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.deduction-info span {
+    font-size: 0.875rem;
+    font-weight: 600;
+}
+
+.ded-segments {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.btn-segment {
+    border: 1px solid var(--border);
+    background: var(--surface-low);
+    padding: 0.4rem 0.8rem;
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    color: var(--text-secondary);
+    min-width: 44px;
+}
+
+.btn-segment:hover {
+    background: #f8fafc;
+    border-color: var(--text-muted);
+}
+
+.btn-segment.active {
+    background: var(--danger) !important;
+    color: white !important;
+    border-color: var(--danger) !important;
+    box-shadow: 0 4px 6px -1px rgba(239, 68, 68, 0.2);
+}
+
+.btn-segment.is-max {
+    border-color: var(--danger);
+    color: var(--danger);
+    background: #fef2f2;
+}
+
+.btn-segment.is-max:hover {
+    background: #fee2e2;
+}
+
 /* Global Deductions Grid */
 .checkbox-grid {
     display: grid;
