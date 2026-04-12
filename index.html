@@ -36,7 +36,7 @@
           <label>Fecha</label>
           <input type="date" id="evalDate" />
         </div>
-        <button class="btn-export" id="btnExport" onclick="exportCSV()">⬇ Exportar CSV</button>
+        <button class="btn-export" id="btnExport" onclick="exportExcel()">⬇ Exportar Excel</button>
       </div>
     </div>
   </header>
@@ -315,6 +315,7 @@
   </div>
 </div>
 
+<script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <script src="data.js"></script>
 <script type="module" src="app.js"></script>
 </body>

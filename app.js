@@ -35,7 +35,7 @@ window.renderElements = renderElements;
 window.setElemState = setElemState;
 window.saveGymnast = saveGymnast;
 window.deleteGymnast = deleteGymnast;
-window.exportCSV = exportCSV;
+window.exportExcel = exportExcel;
 window.renderView = renderView;
 
 // ─── INIT ──────────────────────────────────────────
@@ -652,46 +652,52 @@ async function deleteGymnast() {
 }
 
 // ─── EXPORT CSV ────────────────────────────────────
-function exportCSV() {
+function exportExcel() {
   if (gymnasts.length === 0) { showToast('No hay datos para exportar.', true); return; }
   const teacher = document.getElementById('teacherName').value || 'Sin_Nombre';
-  const date = document.getElementById('evalDate').value || new Date().toISOString().split('T')[0];
+  const dateStr = document.getElementById('evalDate').value || new Date().toISOString().split('T')[0];
 
-  const headers = ['Nombre','Nivel','Años_Actividad','Grupo_Dias','Profesor','Horario','Total_Clases','Clases_Asistidas','Pct_Asistencia',
-    'Comprende_Consignas','Incorpora_Rapido','Predisposicion','Flexibilidad','Fuerza_Brazos','Fuerza_Tronco','Coordinacion',
-    'Elementos_Adquiridos','Elementos_Trabajo','Dudas','Observaciones','Fecha_Evaluacion'];
+  const headers = [
+    'Nombre', 'Nivel', 'Años Actividad', 'Grupo/Días', 'Profesor', 'Horario', 
+    'Clases Teóricas', 'Asistió', '% Asistencia', 'Comprende Consignas', 
+    'Incorpora Rápido', 'Predisposición', 'Flexibilidad', 'Fuerza Brazos', 
+    'Fuerza Tronco', 'Coordinación', 'Elem. Adquiridos', 'Elem. en Trabajo', 
+    'Dudas/Consultas', 'Observaciones', 'Fecha Evaluación'
+  ];
 
-  const rows = gymnasts.map(g => {
+  const data = gymnasts.map(g => {
     const pred = PRED_LABELS[g.predisposicion];
-    const att = calcAtt(g.totalClases, g.asistio);
+    const attPercent = calcAtt(g.totalClases, g.asistio);
     const lvl = LEVEL_DATA[g.level] ? LEVEL_DATA[g.level].label : (g.level || '');
     const adq = Object.values(g.elements || {}).filter(v => v === 'adq').length;
     const trab = Object.values(g.elements || {}).filter(v => v === 'trab').length;
     
-    // Group details
     const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
-    const gDays = gr ? gr.days : (g.days || '');
-    const gProf = gr ? gr.teacher : '';
-    const gTime = gr ? gr.time : '';
     
     return [
-      g.name, lvl, g.years || '', gDays, gProf, gTime, g.totalClases || '', g.asistio || '', att !== '—' ? att + '%' : '',
+      g.name, lvl, parseInt(g.years || 0), gr ? gr.days : (g.days || ''), gr ? gr.teacher : '', gr ? gr.time : '',
+      parseInt(g.totalClases || 0), parseInt(g.asistio || 0), attPercent !== '—' ? attPercent / 100 : 0,
       g.comprende || '', g.incorpora || '', pred ? pred.text.replace(/[🏆⭐💪🌸👪]/g,'').trim() : '',
       g.flex || '', g.fuerzaBrazos || '', g.fuerzaTronco || '', g.coordinacion || '',
-      adq, trab, (g.dudas || '').replace(/\n/g,' '), (g.obs || '').replace(/\n/g,' '), date
-    ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
+      adq, trab, g.dudas || '', g.obs || '', dateStr
+    ];
   });
 
-  const bom = '\uFEFF';
-  const csv = bom + headers.join(',') + '\n' + rows.join('\n');
-  const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url;
-  a.download = `mapeo_gimnastas_${teacher.replace(/\s+/g,'_')}_${date}.csv`;
-  a.click();
-  URL.revokeObjectURL(url);
-  showToast('✓ CSV exportado correctamente.');
+  const worksheetData = [headers, ...data];
+  const wb = XLSX.utils.book_new();
+  const ws = XLSX.utils.aoa_to_sheet(worksheetData);
+
+  // Ajustar el formato de porcentaje en la columna I (index 8)
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let R = range.s.r + 1; R <= range.e.r; ++R) {
+    const cell = ws[XLSX.utils.encode_cell({r:R, c:8})];
+    if(cell) cell.z = '0%';
+  }
+
+  XLSX.utils.book_append_sheet(wb, ws, "Mapeo");
+  XLSX.writeFile(wb, `mapeo_gimnastas_${teacher.replace(/\s+/g,'_')}_${dateStr}.xlsx`);
+  
+  showToast('✓ Excel (.xlsx) exportado correctamente.');
 }
 
 // ─── TOAST ─────────────────────────────────────────
