@@ -242,8 +242,8 @@ window.PRED_LABELS = {
 window.CLUB_GROUPS = [
   // Lunes y Miércoles
   { id: 'lm_lucia_3_5',     days: 'Lunes y Miércoles', time: '17:00 - 18:30', teacher: 'Lucía', age: '3 a 5 años', levelDetail: '' },
-  { id: 'lm_lola_6_9',      days: 'Lunes y Miércoles', time: '17:30 - 19:00', teacher: 'Lola', age: '6 a 9 años', levelDetail: '' },
-  { id: 'lm_milagros_10_15',days: 'Lunes y Miércoles', time: '17:30 - 19:00', teacher: 'Milagros', age: '10 a 15 años', levelDetail: '' },
+  { id: 'lm_lola_6_9',      days: 'Lunes y Miércoles', time: '17:30 - 19:00', teacher: 'Lola', age: '6 a 9 años', levelDetail: 'Iniciación' },
+  { id: 'lm_milagros_10_15',days: 'Lunes y Miércoles', time: '17:30 - 19:00', teacher: 'Milagros', age: '10 a 15 años', levelDetail: 'Iniciación' },
 
   // Martes y Jueves
   { id: 'mj_lolacata_3_5',  days: 'Martes y Jueves',   time: '17:00 - 18:30', teacher: 'Lola-Catalina', age: '3 a 5 años', levelDetail: '' },
