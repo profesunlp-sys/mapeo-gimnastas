@@ -184,15 +184,42 @@ window.EVAL_LEVEL_DETAILS = {
       'SALTO': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Stretch Jump to Mat', value: 10.00, deductions: [
-            { id: 'u1v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 },
-            { id: 'u1v2', text: 'Falta de extensión', val: 0.10 }
+          { name: 'Salto Extendido (Stretch Jump)', value: 10.00, deductions: [
+            { id: 'u1v1', text: 'Pies no simultáneos en trampolín', val: 0.20 },
+            { id: 'u1v2', text: 'Pérdida de velocidad horizontal', val: 0.30 },
+            { id: 'u1v3', text: 'Inclinación excesiva hacia adelante', val: 0.30 },
+            { id: 'u1v4', text: 'Falta de extensión en vuelo', val: 0.20 }
           ]}
         ] 
       },
-      'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Pullover', value: 5.00, deductions: [] }, { name: 'Cast', value: 5.00, deductions: [] }] },
-      'VIGA': { baseScore: 10.00, elements: [{ name: 'Scales', value: 5.00, deductions: [] }, { name: 'Jumps', value: 5.00, deductions: [] }] },
-      'SUELO': { baseScore: 10.00, elements: [{ name: 'Forward Roll', value: 5.00, deductions: [] }, { name: 'Cartwheel', value: 5.00, deductions: [] }] }
+      'PARALELAS': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Pullover', value: 3.00, deductions: [{ id: 'u1p1', text: 'Brazos flexionados', val: 0.30 }, { id: 'u1p2', text: 'Falta de control', val: 0.20 }] },
+          { name: 'Cast (Impulso atrás)', value: 2.00, deductions: [{ id: 'u1p3', text: 'Amplitud insuficiente', val: 0.20 }] },
+          { name: 'Back Hip Circle (Vuelta atrás)', value: 3.00, deductions: [] },
+          { name: 'Underwing Dismount (Salida)', value: 2.00, deductions: [] }
+        ] 
+      },
+      'VIGA': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Entrada Apoyo Frontal', value: 1.00, deductions: [{ id: 'u1b1', text: 'Brazos flexionados', val: 0.20 }] },
+          { name: 'Needle Kick (Patada de Aguja)', value: 2.50, deductions: [{ id: 'u1b2', text: 'Falta de amplitud', val: 0.40 }] },
+          { name: 'Arabesque 30º', value: 2.00, deductions: [] },
+          { name: 'Stretch Jump (Salto extensión)', value: 2.50, deductions: [] },
+          { name: 'Salida: Salto extensión', value: 2.00, deductions: [] }
+        ] 
+      },
+      'SUELO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Forward Roll (Rol adelante)', value: 2.50, deductions: [] },
+          { name: 'Cartwheel (Medialuna)', value: 2.50, deductions: [] },
+          { name: 'Back Tuck Roll (Rol atrás agrupado)', value: 2.50, deductions: [{ id: 'u1f1', text: 'Manos en suelo antes de rodar', val: 0.30 }] },
+          { name: 'Candlestick (Vela)', value: 2.50, deductions: [] }
+        ] 
+      }
     }
   },
   'USAG2': {
@@ -201,14 +228,43 @@ window.EVAL_LEVEL_DETAILS = {
       'SALTO': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Jump to Handstand', value: 10.00, deductions: [
-            { id: 'u2v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 }
+          { name: 'Salto a Parada de Manos', value: 10.00, deductions: [
+            { id: 'u2v1', text: 'Pies no simultáneos en trampolín', val: 0.20 },
+            { id: 'u2v2', text: 'Inclinación excesiva', val: 0.30 }
           ]}
         ] 
       },
-      'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Back Hip Circle', value: 5.00, deductions: [] }, { name: 'Leg Cut', value: 5.00, deductions: [] }] },
-      'VIGA': { baseScore: 10.00, elements: [{ name: '1/2 Turn', value: 5.00, deductions: [] }, { name: 'Leap 60°', value: 5.00, deductions: [] }] },
-      'SUELO': { baseScore: 10.00, elements: [{ name: 'Round-off', value: 5.00, deductions: [] }, { name: 'Bridge', value: 5.00, deductions: [] }] }
+      'PARALELAS': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Pullover', value: 2.50, deductions: [] },
+          { name: 'Back Hip Circle', value: 2.50, deductions: [] },
+          { name: 'Leg Cut (Pasaje de pierna)', value: 2.50, deductions: [] },
+          { name: 'Mill Circle (Vuelta pajarito)', value: 2.50, deductions: [] }
+        ] 
+      },
+      'VIGA': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Entrada Apoyo Frontal', value: 1.00, deductions: [] },
+          { name: '1/2 Turn in Relevé', value: 2.50, deductions: [] },
+          { name: 'Leap 60° (Salto de paso)', value: 2.50, deductions: [] },
+          { name: 'Handstand (Vertical)', value: 2.00, deductions: [] },
+          { name: 'Salida: Salto extensión', value: 2.00, deductions: [] }
+        ] 
+      },
+      'SUELO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Handstand to Bridge', value: 2.50, deductions: [] },
+          { name: 'Back Roll to Push-up', value: 2.50, deductions: [
+            { id: 'u2f1', text: 'Dedo entrelazados / manos separadas', val: 0.10 },
+            { id: 'u2f2', text: 'No mostrar posición lagartija', val: 0.20 }
+          ]},
+          { name: 'Round-off (Rondó)', value: 3.00, deductions: [] },
+          { name: 'Split Leap 60°', value: 2.00, deductions: [] }
+        ] 
+      }
     }
   },
   'USAG3': {
@@ -217,14 +273,41 @@ window.EVAL_LEVEL_DETAILS = {
       'SALTO': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Handstand Flat Back', value: 10.00, deductions: [
-            { id: 'u3v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 }
+          { name: 'Handstand Flat Back (81cm)', value: 10.00, deductions: [
+            { id: 'u3v1', text: 'Pies no simultáneos en trampolín', val: 0.20 },
+            { id: 'u3v2', text: 'Toque una sola mano (JP)', val: 1.00 }
           ]}
         ] 
       },
-      'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Front Hip Circle', value: 5.00, deductions: [] }, { name: 'Underswing', value: 5.00, deductions: [] }] },
-      'VIGA': { baseScore: 10.00, elements: [{ name: 'Handstand', value: 5.00, deductions: [] }, { name: 'Cartwheel', value: 5.00, deductions: [] }] },
-      'SUELO': { baseScore: 10.00, elements: [{ name: 'Handspring', value: 5.00, deductions: [] }, { name: 'Split Leap 90°', value: 5.00, deductions: [] }] }
+      'PARALELAS': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Pullover', value: 1.50, deductions: [] },
+          { name: 'Front Hip Circle', value: 2.00, deductions: [] },
+          { name: 'Single Leg Basket Swing', value: 2.00, deductions: [] },
+          { name: 'Mill Circle', value: 1.50, deductions: [] },
+          { name: 'Squat-on / Pike-on to exit', value: 3.00, deductions: [{ id: 'u3p1', text: 'Pies alternados', val: 0.20 }, { id: 'u3p2', text: 'Tocar barra superior', val: 0.50 }] }
+        ] 
+      },
+      'VIGA': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Handstand (Vertical)', value: 2.50, deductions: [] },
+          { name: 'Leap 90°', value: 2.00, deductions: [] },
+          { name: 'Cartwheel (Medialuna)', value: 2.50, deductions: [] },
+          { name: 'Stretch Jump', value: 1.50, deductions: [] },
+          { name: 'Salida: 1/4 turn to side land', value: 1.50, deductions: [] }
+        ] 
+      },
+      'SUELO': { 
+        baseScore: 10.00, 
+        elements: [
+          { name: 'Handspring Step-out', value: 2.50, deductions: [] },
+          { name: 'Back Roll to 45° Extension', value: 2.50, deductions: [{ id: 'u3f1', text: 'No lograr 45°', val: 0.20 }] },
+          { name: 'Round-off BHS BHS', value: 3.00, deductions: [] },
+          { name: 'Split Leap 90°', value: 2.00, deductions: [] }
+        ] 
+      }
     }
   },
   'USAG4': {
@@ -233,45 +316,47 @@ window.EVAL_LEVEL_DETAILS = {
       'SALTO': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Handspring over Vault Table', value: 10.00, deductions: [
-            { id: 'u4v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 },
-            { id: 'u4v2', text: 'Falta de inversión (ángulo)', val: 0.30 },
-            { id: 'u4v3', text: 'Brazos flexionados', val: 0.30 },
-            { id: 'u4v4', text: 'Falta de fase de vuelo II', val: 0.50 }
+          { name: 'Front Handspring over Vault Table', value: 10.00, deductions: [
+            { id: 'u4v1', text: 'Pies no simultáneos en trampolín', val: 0.20 },
+            { id: 'u4v2', text: 'Apoyo de brazos flexionados', val: 0.50 },
+            { id: 'u4v3', text: 'Falta de inversión (repusión)', val: 0.50 },
+            { id: 'u4v4', text: 'Falta de altura/vuelo 2ª fase', val: 0.30 }
           ]}
         ] 
       },
       'PARALELAS': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Glide Kip', value: 2.00, deductions: [{ id: 'u4p1', text: 'Falta de extensión', val: 0.20 }] },
-          { name: 'Cast to Horizontal', value: 1.50, deductions: [{ id: 'u4p2', text: 'Ángulo por debajo horizontal', val: 0.30 }] },
-          { name: 'Squat-on / Pike-on', value: 1.50, deductions: [] },
-          { name: 'Long Hang Kip', value: 2.00, deductions: [] },
-          { name: 'Back Hip Circle', value: 1.50, deductions: [] },
-          { name: 'Tap Swing with 180° turn dismount', value: 1.50, deductions: [] }
+          { name: 'Kip (Apoyo de pecho)', value: 1.50, deductions: [{ id: 'u4p1', text: 'Falta de extensión en vuelo', val: 0.20 }] },
+          { name: 'Cast to Horizontal (Impulso)', value: 1.50, deductions: [{ id: 'u4p2', text: 'Bajo la horizontal', val: 0.30 }] },
+          { name: 'Squat-on / Pike-on', value: 1.50, deductions: [{ id: 'u4p3', text: 'Pies alternados', val: 0.20 }] },
+          { name: 'Long Hang Kip', value: 1.50, deductions: [] },
+          { name: 'Back Hip Circle (Vuelta atrás)', value: 2.00, deductions: [{ id: 'u4p4', text: 'Falta de continuidad', val: 0.10 }] },
+          { name: 'Underswing/Counterswings', value: 1.00, deductions: [] },
+          { name: 'Dismount: Tap Swing 1/2 Turn', value: 1.00, deductions: [] }
         ] 
       },
       'VIGA': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Cartwheel', value: 2.00, deductions: [] },
-          { name: 'Handstand (2")', value: 2.00, deductions: [] },
-          { name: 'Split Leap / Jump (120°)', value: 2.00, deductions: [] },
-          { name: '1/2 Turn in Passé', value: 1.50, deductions: [] },
-          { name: 'Scale (above horizontal)', value: 1.00, deductions: [] },
-          { name: 'Dismount: Cartwheel to Side HS 1/4 Turn', value: 1.50, deductions: [] }
+          { name: 'Fish Mount (Entrada)', value: 1.00, deductions: [] },
+          { name: 'Cartwheel (Medialuna)', value: 1.50, deductions: [] },
+          { name: '1/2 Turn in Relevé', value: 1.00, deductions: [] },
+          { name: 'Split Jump (120°)', value: 1.50, deductions: [{ id: 'u4b1', text: 'Amplitud insuficiente', val: 0.20 }] },
+          { name: 'Cross Handstand (Vertical)', value: 2.00, deductions: [{ id: 'u4b2', text: 'No llega a vertical', val: 0.30 }] },
+          { name: 'Dismount: Cartwheel to Side HS', value: 1.50, deductions: [] },
+          { name: 'Coreografía y enlaces', value: 1.50, deductions: [] }
         ] 
       },
       'SUELO': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Back Walkover', value: 1.50, deductions: [] },
-          { name: 'Back Extension Roll', value: 1.50, deductions: [] },
-          { name: 'Front Handspring Step-out', value: 2.00, deductions: [] },
-          { name: 'Split Leap / Straddle Jump (120°)', value: 2.00, deductions: [] },
-          { name: '1/1 Turn in Passé', value: 1.00, deductions: [] },
-          { name: 'Round-off BHS BHS', value: 2.00, deductions: [] }
+          { name: 'Back Walkover (150°)', value: 1.50, deductions: [{ id: 'u4f1', text: 'Amplitud insuficiente', val: 0.20 }] },
+          { name: 'Front Handspring Step-out', value: 1.50, deductions: [] },
+          { name: 'Split Leap (120°)', value: 1.50, deductions: [] },
+          { name: '360° Turn in Relevé', value: 1.50, deductions: [] },
+          { name: 'Round-off BHS BHS series', value: 3.00, deductions: [{ id: 'u4f2', text: 'Falta de ritmo/pausa', val: 0.10 }] },
+          { name: 'Cierre coreográfico', value: 1.00, deductions: [] }
         ] 
       }
     }
@@ -282,60 +367,72 @@ window.EVAL_LEVEL_DETAILS = {
       'SALTO': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Handspring over Vault Table', value: 10.00, deductions: [
-            { id: 'u5v1', text: 'Pies no simultáneos en trampolín (Update 2025)', val: 0.20 },
-            { id: 'u5v2', text: 'Cuerpo carpado/arqueado', val: 0.20 }
+          { name: 'Front Handspring over Vault Table', value: 10.00, deductions: [
+            { id: 'u5v1', text: 'Pies no simultáneos en trampolín', val: 0.20 },
+            { id: 'u5v2', text: 'Falta de fase de vuelo (altura)', val: 0.30 },
+            { id: 'u5v3', text: 'Repulsión tardía/hombros', val: 0.50 }
           ]}
         ] 
       },
       'PARALELAS': { 
         baseScore: 10.00, 
+        isSpecial: true, // Indica que tiene lógica de VP opcional
         elements: [
-          { name: 'Glide Kip', value: 1.50, deductions: [] },
-          { name: 'Cast above Horizontal', value: 1.50, deductions: [{ id: 'u5p1', text: 'No alcanzar ángulo', val: 0.30 }] },
-          { name: 'Clear Hip Circle', value: 2.50, deductions: [{ id: 'u5p2', text: 'No alcanzar horizontal', val: 0.40 }] },
-          { name: 'Long Hang Kip', value: 1.50, deductions: [] },
-          { name: 'Dismount: Flyaway (Tuck/Layout)', value: 3.00, deductions: [] }
+          { name: 'Kip (Apoyo de pecho)', value: 1.50, deductions: [] },
+          { name: 'Cast above horizontal', value: 1.50, deductions: [{ id: 'u5p1', text: 'Bajo horizontal', val: 0.30 }] },
+          { name: 'Clear Hip Circle (above horiz.)', value: 2.00, deductions: [{ id: 'u5p2', text: 'Cadera toca barra', val: 0.20 }] },
+          { name: 'Long Hang Kip', value: 1.00, deductions: [] },
+          { name: 'Back Hip Circle / Giant prep', value: 1.50, deductions: [] },
+          { name: 'Dismount: Flyaway (Mortal)', value: 2.50, deductions: [{ id: 'u5p3', text: 'Falta de altura', val: 0.30 }] },
+          { name: 'OPCIÓN: Salida Nivel 4 (SV 9.5)', value: 0.00, isOption: true, subValue: 0.50, deductions: [] }
         ] 
       },
       'VIGA': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'Acro Series (BWO/BHS)', value: 2.50, deductions: [] },
-          { name: 'Split Jump / Sissonne (150°)', value: 2.00, deductions: [] },
-          { name: 'Full Turn in Passé', value: 2.00, deductions: [] },
-          { name: 'Scales / Poses', value: 1.50, deductions: [] },
-          { name: 'Dismount: Back Tuck', value: 2.00, deductions: [] }
+          { name: 'Acro Series (BWO-BWO)', value: 2.00, deductions: [{ id: 'u5b1', text: 'Falta de continuidad', val: 0.10 }] },
+          { name: '1/1 Turn in Passé', value: 1.50, deductions: [] },
+          { name: 'Split Jump (150°)', value: 1.50, deductions: [{ id: 'u5b2', text: 'Amplitud insuficiente', val: 0.20 }] },
+          { name: 'Leap split (150°)', value: 1.50, deductions: [] },
+          { name: 'Sissonne', value: 1.00, deductions: [] },
+          { name: 'Dismount: Back Tuck (Mortal)', value: 1.50, deductions: [] },
+          { name: 'Coreografía', value: 1.00, deductions: [] }
         ] 
       },
       'SUELO': { 
         baseScore: 10.00, 
         elements: [
-          { name: 'RO BHS Back Tuck', value: 3.00, deductions: [] },
-          { name: 'Front Handspring series', value: 2.50, deductions: [] },
-          { name: 'Dance Passage (150° leap)', value: 2.50, deductions: [] },
-          { name: 'Full Turn in Passé', value: 2.00, deductions: [] }
+          { name: 'Front Tuck (Mortal adelante)', value: 2.00, deductions: [{ id: 'u5f1', text: 'Falta de altura', val: 0.30 }] },
+          { name: 'Front Handspring series', value: 1.50, deductions: [] },
+          { name: 'Leap Switch (150°)', value: 1.50, deductions: [] },
+          { name: '1/1 Turn in Passé', value: 1.00, deductions: [] },
+          { name: 'RO BHS Back Tuck series', value: 3.00, deductions: [] },
+          { name: 'Cierre coreográfico', value: 1.00, deductions: [] }
         ] 
       }
     }
   }
 
 
+
 };
 
 window.GLOBAL_DEDUCTIONS = {
   'EXECUTION': [
-    { id: 'ge1', text: 'Flexión de piernas', val: 0.10 },
-    { id: 'ge2', text: 'Flexión de brazos', val: 0.10 },
-    { id: 'ge3', text: 'Pies no en punta', val: 0.05 },
-    { id: 'ge4', text: 'Falta de amplitud', val: 0.10 },
-    { id: 'ge5', text: 'Pérdida leve de equilibrio', val: 0.10 },
-    { id: 'ge6', text: 'Apoyo de manos en aparato', val: 0.30 }
+    { id: 'ge1', text: 'Dinamismo insuficiente', val: 0.20 },
+    { id: 'ge2', text: 'Piernas flexionadas', val: 0.30 },
+    { id: 'ge3', text: 'Brazos flexionados', val: 0.30 },
+    { id: 'ge4', text: 'Falta de puntas', val: 0.10 },
+    { id: 'ge5', text: 'Postura cuerpo (arqueo/carpa)', val: 0.20 },
+    { id: 'ge6', text: 'Brazos no cubren orejas (acro)', val: 0.05 },
+    { id: 'ge7', text: 'Falta sincronización música (FX)', val: 0.30 }
   ],
   'LANDING': [
-    { id: 'gl1', text: 'Paso pequeño', val: 0.10 },
-    { id: 'gl2', text: 'Salto grande', val: 0.30 },
-    { id: 'gl3', text: 'Falta de fijeza', val: 0.10 }
+    { id: 'gl1', text: 'Pasos pequeños (c/u)', val: 0.40 },
+    { id: 'gl2', text: 'Paso largo (>1m)', val: 0.40 },
+    { id: 'gl3', text: 'Sentadilla (cadera baja)', val: 0.30 },
+    { id: 'gl4', text: 'Balanceo de brazos', val: 0.10 },
+    { id: 'gl5', text: 'Falta de fijeza (Stick)', val: 0.10 }
   ],
   'FALL': { id: 'fall', text: 'Caída (adicional)', val: 0.50 }
 };

@@ -230,6 +230,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 techDedsHtml += `</div>`;
             }
 
+            // UI for options vs normal elements
+            const statusHtml = elem.isOption 
+                ? `
+                    <div class="btn-group option-group">
+                        <button class="btn-elem-status" data-elem="${index}" data-status="base">Elegida</button>
+                        <button class="btn-elem-status active" data-elem="${index}" data-status="missing">No elegida</button>
+                    </div>
+                `
+                : `
+                    <div class="btn-group">
+                        <button class="btn-elem-status active" data-elem="${index}" data-status="base">Presente</button>
+                        <button class="btn-elem-status" data-elem="${index}" data-status="missing">No realizado</button>
+                    </div>
+                `;
+
             tr.innerHTML = `
                 <td>
                     <div class="element-name">${elem.name}</div>
@@ -237,19 +252,17 @@ document.addEventListener('DOMContentLoaded', () => {
                 </td>
                 <td class="element-val">${elem.value.toFixed(2)}</td>
                 <td>${techDedsHtml}</td>
-                <td>
-                    <div class="btn-group">
-                        <button class="btn-elem-status active" data-elem="${index}" data-status="base">Presente</button>
-                        <button class="btn-elem-status" data-elem="${index}" data-status="missing">No realizado</button>
-                    </div>
-                </td>
+                <td>${statusHtml}</td>
             `;
             dom.elementsBody.appendChild(tr);
             
             // Init state for this element
+            // Options are NOT SELECTED by default
             currentState.elements[index] = { 
-                status: 'base', 
-                baseValue: elem.value, 
+                status: elem.isOption ? 'missing' : 'base', 
+                baseValue: elem.value,
+                isOption: elem.isOption || false,
+                subValue: elem.subValue || 0,
                 appliedDeductions: [] 
             };
         });
@@ -341,11 +354,20 @@ document.addEventListener('DOMContentLoaded', () => {
         let deductions = 0;
         let startVal = currentState.startValue;
 
-        // 1. Element Status (Faltante = Deduce valor del elemento)
+        // 1. Element Status (Faltante = Deduce valor del elemento; Opción = Ajusta SV)
         Object.keys(currentState.elements).forEach(id => {
             const elem = currentState.elements[id];
-            if(elem.status === 'missing') {
-                deductions += elem.baseValue;
+            
+            if (elem.isOption) {
+                // Si la opción está "Elegida" (base), se resta del Valor de Partida inicial
+                if (elem.status === 'base') {
+                    startVal -= elem.subValue;
+                }
+            } else {
+                // Elemento normal: si falta, se descuenta su valor
+                if (elem.status === 'missing') {
+                    deductions += elem.baseValue;
+                }
             }
         });
 
@@ -354,14 +376,11 @@ document.addEventListener('DOMContentLoaded', () => {
             deductions += parseFloat(btn.dataset.val);
         });
 
-        // 3. (Reserved for other future fixed deductions if needed)
-
-        // 4. Falls (0.50 ea)
+        // 3. Falls (0.50 ea)
         deductions += (currentState.falls * 0.50);
 
-        // 5. Vault Specific
+        // 4. Vault Specific
         if(currentState.apparatus === 'SALTO' && currentState.vaultRuns > 1) {
-            // Empty runs: 1st is free, others -0.50
             deductions += (currentState.vaultRuns - 1) * 0.50;
         }
 
@@ -371,6 +390,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         currentState.totalDeductions = deductions;
         currentState.finalScore = final;
+        currentState.adjustedStartValue = startVal;
 
         // Update UI
         dom.startVal.textContent = startVal.toFixed(2);
@@ -395,6 +415,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 level: currentState.level,
                 apparatus: currentState.apparatus,
                 startValue: currentState.startValue,
+                adjustedStartValue: currentState.adjustedStartValue || currentState.startValue,
                 totalDeductions: currentState.totalDeductions,
                 finalScore: currentState.finalScore,
                 observations: document.getElementById('observations').value,
