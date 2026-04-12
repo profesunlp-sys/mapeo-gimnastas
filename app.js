@@ -440,6 +440,53 @@ function calcAttendance() {
   el.className = 'attendance-display ' + (pct >= 80 ? 'att-high' : pct >= 60 ? 'att-mid' : 'att-low');
 }
 
+function onGroupChange() {
+  const groupId = document.getElementById('fGroup').value;
+  if (!groupId) {
+    document.getElementById('fTotalClases').value = '';
+    calcAttendance();
+    return;
+  }
+  const total = calculateExpectedClasses(groupId);
+  document.getElementById('fTotalClases').value = total;
+  calcAttendance();
+}
+
+function calculateExpectedClasses(groupId) {
+  const gr = window.CLUB_GROUPS.find(g => g.id === groupId);
+  if (!gr || !window.CLUB_CONFIG) return 0;
+  
+  // Mapear el string 'days' a los días de la semana (0:Dom, 1:Lun, 2:Mar, 3:Mie, 4:Jue, 5:Vie, 6:Sab)
+  let validDays = [];
+  const daysStr = gr.days.toLowerCase();
+  if (daysStr.includes('lunes y miércoles')) validDays = [1, 3];
+  else if (daysStr.includes('martes y jueves')) validDays = [2, 4];
+  else if (daysStr.includes('sábado') || daysStr.includes('sabado')) validDays = [6];
+  else return 0; // Fallback
+  
+  const start = new Date(window.CLUB_CONFIG.periodStart + 'T00:00:00');
+  const end = new Date(window.CLUB_CONFIG.periodEnd + 'T00:00:00');
+  const holidays = window.CLUB_CONFIG.holidays || [];
+  
+  let count = 0;
+  let currentDate = new Date(start);
+  
+  while (currentDate <= end) {
+    // 1. Ver si es un día de cursada
+    if (validDays.includes(currentDate.getDay())) {
+      // 2. Ver si NO es feriado
+      const isoDate = currentDate.toISOString().split('T')[0];
+      if (!holidays.includes(isoDate)) {
+        count++;
+      }
+    }
+    // Siguiente día
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+  return count;
+}
+
+
 // ─── ELEMENTS RENDERER ────────────────────────────
 function renderElements() {
   const level = document.getElementById('fLevel').value;

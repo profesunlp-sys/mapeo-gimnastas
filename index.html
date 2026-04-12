@@ -168,7 +168,7 @@
           </div>
           <div class="form-group full">
             <label for="fGroup">Grupo (Días, Horarios y Profesores)</label>
-            <select id="fGroup">
+            <select id="fGroup" onchange="onGroupChange()">
               <!-- Se llena dinámicamente con app.js -->
             </select>
           </div>
@@ -188,8 +188,8 @@
             </select>
           </div>
           <div class="form-group">
-            <label for="fTotalClases">Total clases en el mes</label>
-            <input type="number" id="fTotalClases" min="0" max="30" placeholder="ej: 12" inputmode="numeric" oninput="calcAttendance()" />
+            <label for="fTotalClases">Total clases teóricas <small style="color:var(--primary);font-weight:normal">(Auto)</small></label>
+            <input type="number" id="fTotalClases" min="0" max="30" placeholder="Calculado..." inputmode="numeric" readonly style="background:var(--surface);cursor:not-allowed;" />
           </div>
           <div class="form-group">
             <label for="fAsistio">Clases a las que asistió</label>

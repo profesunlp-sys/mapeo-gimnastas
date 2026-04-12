@@ -259,3 +259,24 @@ window.CLUB_GROUPS = [
   { id: 's_catalina_10_15', days: 'Sábado',            time: '10:00 - 13:00', teacher: 'Catalina', age: '10 a 15 años', levelDetail: 'Inicial' },
   { id: 's_milagros_10_15', days: 'Sábado',            time: '10:00 - 13:00', teacher: 'Milagros', age: '10 a 15 años', levelDetail: 'Avanzado' }
 ];
+
+// ---------------------------------------------------
+// CONFIGURACIÓN DE CICLO Y FERIADOS NACIONALES
+// ---------------------------------------------------
+window.CLUB_CONFIG = {
+  // Fecha de inicio de clases
+  periodStart: '2026-03-07',
+  
+  // Fecha de corte de la evaluación actual (puede actualizarse)
+  periodEnd: '2026-04-18', 
+  
+  // Array de feriados formato YYYY-MM-DD
+  holidays: [
+    '2026-03-23', // Puente
+    '2026-03-24', // Memoria
+    '2026-04-02', // Malvinas / Jueves Santo
+    '2026-04-04', // Sábado Santo / Feriado
+    '2026-05-25'  // Revolución de Mayo
+    // *Se irán agregando feriados puente aquí*
+  ]
+};
