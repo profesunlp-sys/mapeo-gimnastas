@@ -233,5 +233,29 @@ window.PRED_LABELS = {
   '2': { text: '⭐ Competitiva en desarrollo', cls: 'pm2' },
   '3': { text: '💪 Deportiva sin competencia', cls: 'pm3' },
   '4': { text: '🌸 Recreativa', cls: 'pm4' },
-  '5': { text: '👪 Asistencial', cls: 'pm5' },
+  5: { text: '👪 Asistencial', cls: 'p5' }
 };
+
+// ---------------------------------------------------
+// ESTRUCTURA DE GRUPOS (LUN-MIE / MAR-JUE / SABADOS)
+// ---------------------------------------------------
+window.CLUB_GROUPS = [
+  // Lunes y Miércoles
+  { id: 'lm_lucia_3_5',     days: 'Lunes y Miércoles', time: '17:00 - 18:30', teacher: 'Lucía', age: '3 a 5 años', levelDetail: '' },
+  { id: 'lm_lola_6_9',      days: 'Lunes y Miércoles', time: '17:30 - 19:00', teacher: 'Lola', age: '6 a 9 años', levelDetail: '' },
+  { id: 'lm_milagros_10_15',days: 'Lunes y Miércoles', time: '17:30 - 19:00', teacher: 'Milagros', age: '10 a 15 años', levelDetail: '' },
+
+  // Martes y Jueves
+  { id: 'mj_lolacata_3_5',  days: 'Martes y Jueves',   time: '17:00 - 18:30', teacher: 'Lola-Catalina', age: '3 a 5 años', levelDetail: '' },
+  { id: 'mj_maylen_6_9',    days: 'Martes y Jueves',   time: '17:30 - 19:00', teacher: 'Maylen', age: '6 a 9 años', levelDetail: 'Iniciales' },
+  { id: 'mj_sabrina_6_9',   days: 'Martes y Jueves',   time: '17:30 - 19:00', teacher: 'Sabrina', age: '6 a 9 años', levelDetail: 'Avanzado' },
+  { id: 'mj_catalina_10_15',days: 'Martes y Jueves',   time: '18:30 - 20:00', teacher: 'Catalina', age: '10 a 15 años', levelDetail: 'Inicial' },
+  { id: 'mj_milagros_10_15',days: 'Martes y Jueves',   time: '17:30 - 19:00', teacher: 'Milagros', age: '10 a 15 años', levelDetail: 'Avanzado' },
+
+  // Sábados
+  { id: 's_lucialola_3_5',  days: 'Sábado',            time: '10:00 - 13:00', teacher: 'Lucía-Lola', age: '3 a 5 años', levelDetail: '' },
+  { id: 's_maylen_6_9',     days: 'Sábado',            time: '10:00 - 13:00', teacher: 'Maylen', age: '6 a 9 años', levelDetail: 'Inicial' },
+  { id: 's_sabrina_6_9',    days: 'Sábado',            time: '10:00 - 13:00', teacher: 'Sabrina', age: '6 a 9 años', levelDetail: 'Avanzado' },
+  { id: 's_catalina_10_15', days: 'Sábado',            time: '10:00 - 13:00', teacher: 'Catalina', age: '10 a 15 años', levelDetail: 'Inicial' },
+  { id: 's_milagros_10_15', days: 'Sábado',            time: '10:00 - 13:00', teacher: 'Milagros', age: '10 a 15 años', levelDetail: 'Avanzado' }
+];

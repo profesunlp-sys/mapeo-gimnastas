@@ -134,6 +134,11 @@ function renderCards(filtered) {
     const lvlData = LEVEL_DATA[g.level];
     const lvlLabel = lvlData ? lvlData.label : (g.level || 'Sin nivel');
     const pred = PRED_LABELS[g.predisposicion];
+    
+    // Group details
+    const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
+    const groupText = gr ? `${gr.days} (${gr.teacher})` : (g.days ? `${g.days}/sem` : '—');
+    
     return `<div class="gymnast-card">
       <div class="card-top">
         <div>
@@ -151,8 +156,8 @@ function renderCards(filtered) {
           <span class="card-stat-val">${g.years !== '' && g.years !== undefined ? g.years : '—'}</span>
         </div>
         <div class="card-stat">
-          <span class="card-stat-label">Días/sem</span>
-          <span class="card-stat-val">${g.days || '—'}</span>
+          <span class="card-stat-label">Grupo/Días</span>
+          <span class="card-stat-val" style="font-size:0.75rem">${groupText}</span>
         </div>
         <div class="card-stat">
           <span class="card-stat-label">Asistencia</span>
@@ -219,12 +224,15 @@ function renderTable(filtered) {
       `;
     }
 
+    const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
+    const groupText = gr ? `${gr.days}<br><span style="color:var(--text3);font-size:0.75rem">${gr.teacher}</span>` : (g.days ? `${g.days}/sem` : '<span class="dash">—</span>');
+
     return `<tr>
       <td class="row-num">${i + 1}</td>
       <td class="col-name">${esc(g.name) || '<span class="dash">Sin nombre</span>'}</td>
       <td><span class="lvl-badge badge-${g.level || 'Principiante'}">${esc(lvlLabel)}</span></td>
       <td>${g.years !== '' && g.years !== undefined ? g.years + ' año' + (g.years != 1 ? 's' : '') : '<span class="dash">—</span>'}</td>
-      <td>${g.days ? g.days + '/sem' : '<span class="dash">—</span>'}</td>
+      <td>${groupText}</td>
       <td>${attHtml}</td>
       <td>${boolDisplayText(g.comprende)}</td>
       <td>${boolDisplayText(g.incorpora)}</td>
@@ -309,13 +317,34 @@ function openModal(id) {
   document.getElementById('btnDelete').style.display = id ? 'block' : 'none';
   document.body.style.overflow = 'hidden';
 
+  // Población de dropdown fGroup
+  const fGroupSelect = document.getElementById('fGroup');
+  if (fGroupSelect && fGroupSelect.options.length <= 1) {
+    fGroupSelect.innerHTML = '<option value="">— Seleccionar Grupo —</option>';
+    let currentDays = '';
+    let optgroup = null;
+    window.CLUB_GROUPS.forEach(gr => {
+      if (gr.days !== currentDays) {
+        if (optgroup) fGroupSelect.appendChild(optgroup);
+        optgroup = document.createElement('optgroup');
+        optgroup.label = gr.days;
+        currentDays = gr.days;
+      }
+      const opt = document.createElement('option');
+      opt.value = gr.id;
+      opt.textContent = `${gr.time} | ${gr.teacher} | ${gr.age} ${gr.levelDetail ? '('+gr.levelDetail+')' : ''}`;
+      optgroup.appendChild(opt);
+    });
+    if (optgroup) fGroupSelect.appendChild(optgroup);
+  }
+
   if (id) {
     const g = gymnasts.find(x => x.id === id);
     if (!g) return;
     document.getElementById('modalTitle').textContent = '✏ Editar Gimnasta';
     document.getElementById('fName').value = g.name || '';
+    if (document.getElementById('fGroup')) document.getElementById('fGroup').value = g.groupId || '';
     document.getElementById('fYears').value = g.years !== undefined ? g.years : '';
-    document.getElementById('fDays').value = g.days || '';
     document.getElementById('fTotalClases').value = g.totalClases || '';
     document.getElementById('fAsistio').value = g.asistio || '';
     document.getElementById('fLevel').value = g.level || '';
@@ -339,8 +368,8 @@ function openModal(id) {
   } else {
     document.getElementById('modalTitle').textContent = '+ Nueva Gimnasta';
     document.getElementById('fName').value = '';
+    if (document.getElementById('fGroup')) document.getElementById('fGroup').value = '';
     document.getElementById('fYears').value = '';
-    document.getElementById('fDays').value = '';
     document.getElementById('fTotalClases').value = '';
     document.getElementById('fAsistio').value = '';
     document.getElementById('fLevel').value = '';
@@ -472,10 +501,13 @@ async function saveGymnast() {
   if (!name) { showToast('Por favor escribí el nombre de la gimnasta.', true); return; }
 
   const pred = document.querySelector('input[name="pred"]:checked');
+  const classGroup = window.CLUB_GROUPS.find(gr => gr.id === document.getElementById('fGroup')?.value) || null;
+  
   const g = {
     name,
+    groupId: classGroup ? classGroup.id : null,
     years: document.getElementById('fYears').value,
-    days: document.getElementById('fDays').value,
+    days: classGroup ? classGroup.days : '', // Fallback for backwards compat
     totalClases: document.getElementById('fTotalClases').value,
     asistio: document.getElementById('fAsistio').value,
     level: document.getElementById('fLevel').value,
@@ -542,7 +574,7 @@ function exportCSV() {
   const teacher = document.getElementById('teacherName').value || 'Sin_Nombre';
   const date = document.getElementById('evalDate').value || new Date().toISOString().split('T')[0];
 
-  const headers = ['Nombre','Nivel','Años_Actividad','Dias_Semana','Total_Clases','Clases_Asistidas','Pct_Asistencia',
+  const headers = ['Nombre','Nivel','Años_Actividad','Grupo_Dias','Profesor','Horario','Total_Clases','Clases_Asistidas','Pct_Asistencia',
     'Comprende_Consignas','Incorpora_Rapido','Predisposicion','Flexibilidad','Fuerza_Brazos','Fuerza_Tronco','Coordinacion',
     'Elementos_Adquiridos','Elementos_Trabajo','Dudas','Observaciones','Fecha_Evaluacion'];
 
@@ -552,8 +584,15 @@ function exportCSV() {
     const lvl = LEVEL_DATA[g.level] ? LEVEL_DATA[g.level].label : (g.level || '');
     const adq = Object.values(g.elements || {}).filter(v => v === 'adq').length;
     const trab = Object.values(g.elements || {}).filter(v => v === 'trab').length;
+    
+    // Group details
+    const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
+    const gDays = gr ? gr.days : (g.days || '');
+    const gProf = gr ? gr.teacher : '';
+    const gTime = gr ? gr.time : '';
+    
     return [
-      g.name, lvl, g.years || '', g.days || '', g.totalClases || '', g.asistio || '', att !== '—' ? att + '%' : '',
+      g.name, lvl, g.years || '', gDays, gProf, gTime, g.totalClases || '', g.asistio || '', att !== '—' ? att + '%' : '',
       g.comprende || '', g.incorpora || '', pred ? pred.text.replace(/[🏆⭐💪🌸👪]/g,'').trim() : '',
       g.flex || '', g.fuerzaBrazos || '', g.fuerzaTronco || '', g.coordinacion || '',
       adq, trab, (g.dudas || '').replace(/\n/g,' '), (g.obs || '').replace(/\n/g,' '), date

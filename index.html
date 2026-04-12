@@ -99,7 +99,7 @@
           <th>Nombre y Apellido</th>
           <th>Nivel</th>
           <th>Años</th>
-          <th>Días/sem</th>
+          <th>Días / Profe</th>
           <th>Asistencia</th>
           <th>Comprende</th>
           <th>Incorpora</th>
@@ -165,6 +165,12 @@
           <div class="form-group full">
             <label for="fName">Nombre y Apellido *</label>
             <input type="text" id="fName" placeholder="Apellido, Nombre" autocomplete="off" inputmode="text" />
+          </div>
+          <div class="form-group full">
+            <label for="fGroup">Grupo (Días, Horarios y Profesores)</label>
+            <select id="fGroup">
+              <!-- Se llena dinámicamente con app.js -->
+            </select>
           </div>
           <div class="form-group">
             <label for="fYears">Años en la actividad</label>
