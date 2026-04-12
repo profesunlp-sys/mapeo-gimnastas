@@ -184,13 +184,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function renderEvaluation() {
         const levelData = EVAL_LEVEL_DETAILS[currentState.level];
-        const appData = levelData.apparatuses[currentState.apparatus];
+        const appData = levelData.aparatos[currentState.apparatus];
         
+        if(!appData) {
+            alert("Aparato no disponible para este nivel.");
+            hideEvaluation();
+            return;
+        }
+
         // Header
         dom.evalTitle.textContent = `Evaluación Técnica - ${currentState.apparatus} (${currentState.level})`;
         
         // Start Value
-        currentState.startValue = appData.startValue;
+        currentState.startValue = appData.baseScore;
 
         // Vault Area
         if(currentState.apparatus === 'SALTO') {
@@ -206,15 +212,15 @@ document.addEventListener('DOMContentLoaded', () => {
             
             // Checkboxes for deductions
             let techDedsHtml = '';
-            if(elem.technicalDeductions && elem.technicalDeductions.length > 0) {
+            if(elem.deductions && elem.deductions.length > 0) {
                 techDedsHtml = `<div class="deduction-list">`;
-                elem.technicalDeductions.forEach((d, dIdx) => {
+                elem.deductions.forEach((d, dIdx) => {
                     const id = `ded-elem-${index}-${dIdx}`;
                     techDedsHtml += `
                         <label class="ded-check" for="${id}">
-                            <input type="checkbox" id="${id}" data-type="elem" data-elem="${index}" data-val="${d.value}">
-                            <span>${d.label}</span>
-                            <span class="ded-val">-${d.value.toFixed(2)}</span>
+                            <input type="checkbox" id="${id}" data-type="elem" data-elem="${index}" data-val="${d.val}">
+                            <span>${d.text}</span>
+                            <span class="ded-val">-${d.val.toFixed(2)}</span>
                         </label>
                     `;
                 });
@@ -246,8 +252,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         // 2. Global Execution
-        renderGlobalDeductions(dom.execDeducsArea, EVAL_GLOBAL_DEDUCTIONS.EXECUTION, 'exec');
-        renderGlobalDeductions(dom.landDeducsArea, EVAL_GLOBAL_DEDUCTIONS.LANDINGS, 'land');
+        renderGlobalDeductions(dom.execDeducsArea, GLOBAL_DEDUCTIONS.EXECUTION, 'exec');
+        renderGlobalDeductions(dom.landDeducsArea, GLOBAL_DEDUCTIONS.LANDINGS, 'land');
 
         // Add Listeners to all new checkboxes
         setupListeners();
@@ -260,9 +266,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const div = document.createElement('div');
             div.innerHTML = `
                 <label class="ded-check" for="${id}">
-                    <input type="checkbox" id="${id}" data-type="${type}" data-idx="${idx}" data-val="${d.value}">
-                    <span>${d.label}</span>
-                    <span class="ded-val">-${d.value.toFixed(2)}</span>
+                    <input type="checkbox" id="${id}" data-type="${type}" data-idx="${idx}" data-val="${d.val}">
+                    <span>${d.text}</span>
+                    <span class="ded-val">-${d.val.toFixed(2)}</span>
                 </label>
             `;
             container.appendChild(div);

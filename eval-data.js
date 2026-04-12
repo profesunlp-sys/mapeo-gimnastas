@@ -1,6 +1,6 @@
 /**
  * EVAL-DATA.JS
- * Datos técnicos de evaluación para Gimnasia Artística Femenina (CAG Niveles E 2026)
+ * Datos técnicos de evaluación para Gimnasia Artística Femenina (CAG Niveles E 2026 y USAG 1-3)
  */
 
 window.EVAL_CONSTANTS = {
@@ -56,67 +56,45 @@ window.EVAL_LEVEL_DETAILS = {
       'VIGA': {
         baseScore: 10.00,
         elements: [
-          { name: 'Entrada horcajada + cuclillas', value: 1.00, deductions: [
-            { id: 'vi1', text: 'Falta fluidez en transición', val: 0.10 },
-            { id: 'vi2', text: 'No mantener 1" en cuclillas', val: 0.10 }
-          ]},
-          { name: 'Passé 1ª pierna (1")', value: 1.00, deductions: [
-            { id: 'vi3', text: 'Rodilla baja', val: 0.20 },
-            { id: 'vi4', text: 'Brazos no en cintura', val: 0.10 }
-          ]},
-          { name: 'Passé 2ª pierna (1")', value: 1.00, deductions: [
-            { id: 'vi5', text: 'Pierna base flexionada', val: 0.20 },
-            { id: 'vi6', text: 'Desequilibrio', val: 0.10 }
-          ]},
-          { name: 'Dos pasos en relevé', value: 1.50, deductions: [
-            { id: 'vi7', text: 'Talones abajo', val: 0.10 },
-            { id: 'vi8', text: 'Pasos no en línea', val: 0.10 }
-          ]},
-          { name: 'Salto en extensión', value: 2.50, deductions: [
-            { id: 'vi9', text: 'Pies no cerrados', val: 0.10 },
-            { id: 'vi10', text: 'Falta altura', val: 0.20 }
-          ]},
-          { name: 'Regreso a cuclillas + pie', value: 1.50, deductions: [
-            { id: 'vi11', text: 'Empujar con manos', val: 0.30 }
-          ]},
-          { name: 'Salida: Salto en extensión', value: 1.50, deductions: [
-            { id: 'vi12', text: 'No salir por extremo', val: 0.10 },
-            { id: 'vi13', text: 'Aterrizaje inestable', val: 0.30 }
-          ]}
+          { name: 'Entrada horcajada + cuclillas', value: 1.00, deductions: [] },
+          { name: 'Passé 1ª pierna (1")', value: 1.00, deductions: [] },
+          { name: 'Passé 2ª pierna (1")', value: 1.00, deductions: [] },
+          { name: 'Dos pasos en relevé', value: 1.50, deductions: [] },
+          { name: 'Salto en extensión', value: 2.50, deductions: [] },
+          { name: 'Regreso a cuclillas + pie', value: 1.50, deductions: [] },
+          { name: 'Salida: Salto en extensión', value: 1.50, deductions: [] }
         ]
       },
       'SUELO': {
         baseScore: 10.00,
         elements: [
-          { name: 'Enlace coreográfico', value: 1.00, deductions: [
-            { id: 's1', text: 'Falta fluidez/expresión', val: 0.20 }
-          ]},
-          { name: 'Passé alternados (x2)', value: 1.00, deductions: [
-            { id: 's2', text: 'Altura incorrecta rodilla', val: 0.20 }
-          ]},
-          { name: 'Pasos en relevé (x2)', value: 1.00, deductions: [
-            { id: 's3', text: 'Talones abajo', val: 0.10 }
-          ]},
-          { name: 'Rol adelante agrupado', value: 1.50, deductions: [
-            { id: 's4', text: 'Empujar con manos', val: 0.30 },
-            { id: 's5', text: 'Cruce de piernas al subir', val: 0.30 }
-          ]},
-          { name: 'Salto en extensión (conec.)', value: 1.00, deductions: [
-            { id: 's6', text: 'Falta conexión inmediata', val: 0.20 }
-          ]},
-          { name: 'Salto Gato', value: 1.00, deductions: [
-            { id: 's7', text: 'Rodillas bajas', val: 0.20 }
-          ]},
-          { name: 'Vertical', value: 1.50, deductions: [
-            { id: 's8', text: 'No llegar a la vertical', val: 0.30 },
-            { id: 's9', text: 'Cuerpo arqueado', val: 0.20 }
-          ]},
-          { name: 'Vela', value: 1.00, deductions: [
-            { id: 's10', text: 'Apoyar manos para bajar', val: 0.30 }
-          ]},
-          { name: 'Sapo (1")', value: 1.00, deductions: [
-            { id: 's11', text: 'No llegar pecho al suelo', val: 0.20 }
-          ]}
+          { name: 'Enlace coreográfico', value: 1.00, deductions: [] },
+          { name: 'Passé alternados (x2)', value: 1.00, deductions: [] },
+          { name: 'Rol adelante agrupado', value: 1.50, deductions: [] },
+          { name: 'Vertical', value: 1.50, deductions: [] },
+          { name: 'Salto Gato', value: 1.00, deductions: [] },
+          { name: 'Vela', value: 1.00, deductions: [] },
+          { name: 'Sapo (1")', value: 1.00, deductions: [] }
+        ]
+      }
+    }
+  },
+  'E1B': {
+    label: 'Nivel E1 B',
+    aparatos: {
+      'SALTO': {
+        baseScore: 10.00,
+        elements: [
+          { name: 'Carrera y Pique', value: 5.00, deductions: [] },
+          { name: 'Salto Extensión (básico)', value: 5.00, deductions: [] }
+        ]
+      },
+      'SUELO': {
+        baseScore: 10.00,
+        elements: [
+          { name: 'Rol adelante', value: 3.00, deductions: [] },
+          { name: 'Salto extensión', value: 3.00, deductions: [] },
+          { name: 'Equilibrio (1 pie)', value: 4.00, deductions: [] }
         ]
       }
     }
@@ -128,10 +106,7 @@ window.EVAL_LEVEL_DETAILS = {
         baseScore: 10.00,
         elements: [
           { name: 'Salto en extensión', value: 5.00, deductions: [] },
-          { name: 'Vertical caída dorsal', value: 5.00, deductions: [
-            { id: 'v2_1', text: 'Falta repulsión hombros', val: 0.30 },
-            { id: 'v2_2', text: 'No pasar por vertical', val: 0.30 }
-          ]}
+          { name: 'Vertical caída dorsal', value: 5.00, deductions: [] }
         ]
       },
       'PARALELAS': {
@@ -139,9 +114,7 @@ window.EVAL_LEVEL_DETAILS = {
         elements: [
           { name: 'Entrada salto al apoyo', value: 1.50, deductions: [] },
           { name: 'Flotante (Back swing)', value: 1.50, deductions: [] },
-          { name: 'Pasaje de pierna (2")', value: 2.50, deductions: [
-            { id: 'p2_1', text: 'Falta mantención', val: 0.30 }
-          ]},
+          { name: 'Pasaje de pierna (2")', value: 2.50, deductions: [] },
           { name: 'Flotante atrás a pie', value: 2.50, deductions: [] },
           { name: 'Escuadra colgada (2")', value: 2.00, deductions: [] }
         ]
@@ -151,24 +124,17 @@ window.EVAL_LEVEL_DETAILS = {
         elements: [
           { name: 'Entrada horcajada + pie', value: 1.00, deductions: [] },
           { name: 'Salto Gato', value: 1.50, deductions: [] },
-          { name: 'Battement al frente', value: 1.50, deductions: [] },
           { name: 'Arabesque 30º (1")', value: 1.50, deductions: [] },
-          { name: 'Passé alternados (1")', value: 1.00, deductions: [] },
-          { name: '1/4 Giro sobre 2 pies', value: 1.50, deductions: [] },
+          { name: 'Giro 90º sobre 2 pies', value: 1.50, deductions: [] },
           { name: 'Salida: Salto extensión', value: 2.00, deductions: [] }
         ]
       },
       'SUELO': {
         baseScore: 10.00,
         elements: [
-          { name: 'Enlace coreográfico', value: 1.00, deductions: [] },
-          { name: 'Dos 1/2 Giros (2 pies)', value: 1.00, deductions: [] },
-          { name: 'Passé - Developpé (x2)', value: 1.00, deductions: [] },
-          { name: 'Salto Gato', value: 1.00, deductions: [] },
           { name: 'Vertical', value: 1.50, deductions: [] },
           { name: 'Rol adelante agrupado', value: 1.50, deductions: [] },
           { name: 'Medialuna', value: 1.50, deductions: [] },
-          { name: 'Arabesca 30º', value: 0.50, deductions: [] },
           { name: 'Vela / Sapo', value: 1.00, deductions: [] }
         ]
       }
@@ -180,47 +146,63 @@ window.EVAL_LEVEL_DETAILS = {
       'SALTO': {
         baseScore: 10.00,
         elements: [
-          { name: 'Vuelo Mortero (recepción acostada)', value: 10.00, deductions: [
-            { id: 'v3_1', text: 'Falta vuelo primer fase', val: 0.50 },
-            { id: 'v3_2', text: 'Falta repulsión', val: 0.50 }
-          ]}
+          { name: 'Vuelo Mortero (recepción acostada)', value: 10.00, deductions: [] }
         ]
       },
       'PARALELAS': {
         baseScore: 10.00,
         elements: [
           { name: 'Vuelta pajarito (Cast)', value: 2.00, deductions: [] },
-          { name: 'Flotante al apoyo', value: 2.00, deductions: [] },
           { name: 'Vuelta atrás', value: 2.00, deductions: [] },
           { name: 'Pasaje de pierna palmar', value: 2.00, deductions: [] },
-          { name: 'Salida: Piso-Piso + Salto extensión', value: 2.00, deductions: [] }
+          { name: 'Salida: Salto extensión', value: 2.00, deductions: [] }
         ]
       },
       'VIGA': {
         baseScore: 10.00,
         elements: [
-          { name: 'Entrada horcajada + escuadra (2")', value: 1.50, deductions: [] },
-          { name: 'Salto Gato', value: 1.00, deductions: [] },
-          { name: 'Battement al frente', value: 1.00, deductions: [] },
+          { name: 'Entrada escuadra (2")', value: 1.50, deductions: [] },
           { name: 'Paloma horizontal (1")', value: 1.50, deductions: [] },
           { name: 'Vertical 30º', value: 1.50, deductions: [] },
-          { name: 'Dos 1/2 giros sobre 2 pies', value: 1.50, deductions: [] },
-          { name: 'Salida: Salto extensión extremo', value: 2.00, deductions: [] }
+          { name: 'Salida: Salto extensión', value: 2.00, deductions: [] }
         ]
       },
       'SUELO': {
         baseScore: 10.00,
         elements: [
-          { name: 'Enlace coreográfico', value: 0.50, deductions: [] },
-          { name: '1/2 giro passé (1 pie)', value: 0.50, deductions: [] },
-          { name: 'Jeté 90º', value: 1.00, deductions: [] },
           { name: 'Vertical Rol', value: 1.50, deductions: [] },
-          { name: 'Salto extensión 1/2 giro', value: 1.50, deductions: [] },
-          { name: 'Rol atrás (agrup/ext)', value: 1.50, deductions: [] },
+          { name: 'Rol atrás', value: 1.50, deductions: [] },
           { name: 'Medialuna', value: 1.00, deductions: [] },
-          { name: 'Rondó + Salto extensión', value: 2.00, deductions: [] }
+          { name: 'Rondó', value: 2.00, deductions: [] }
         ]
       }
+    }
+  },
+  'USAG1': {
+    label: 'USAG Nivel 1',
+    aparatos: {
+      'SALTO': { baseScore: 10.00, elements: [{ name: 'Stretch Jump to Mat', value: 10.00, deductions: [] }] },
+      'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Pullover', value: 5.00, deductions: [] }, { name: 'Cast', value: 5.00, deductions: [] }] },
+      'VIGA': { baseScore: 10.00, elements: [{ name: 'Scales', value: 5.00, deductions: [] }, { name: 'Jumps', value: 5.00, deductions: [] }] },
+      'SUELO': { baseScore: 10.00, elements: [{ name: 'Forward Roll', value: 5.00, deductions: [] }, { name: 'Cartwheel', value: 5.00, deductions: [] }] }
+    }
+  },
+  'USAG2': {
+    label: 'USAG Nivel 2',
+    aparatos: {
+      'SALTO': { baseScore: 10.00, elements: [{ name: 'Jump to Handstand', value: 10.00, deductions: [] }] },
+      'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Back Hip Circle', value: 5.00, deductions: [] }, { name: 'Leg Cut', value: 5.00, deductions: [] }] },
+      'VIGA': { baseScore: 10.00, elements: [{ name: '1/2 Turn', value: 5.00, deductions: [] }, { name: 'Leap 60°', value: 5.00, deductions: [] }] },
+      'SUELO': { baseScore: 10.00, elements: [{ name: 'Round-off', value: 5.00, deductions: [] }, { name: 'Bridge', value: 5.00, deductions: [] }] }
+    }
+  },
+  'USAG3': {
+    label: 'USAG Nivel 3',
+    aparatos: {
+      'SALTO': { baseScore: 10.00, elements: [{ name: 'Handstand Flat Back', value: 10.00, deductions: [] }] },
+      'PARALELAS': { baseScore: 10.00, elements: [{ name: 'Front Hip Circle', value: 5.00, deductions: [] }, { name: 'Underswing', value: 5.00, deductions: [] }] },
+      'VIGA': { baseScore: 10.00, elements: [{ name: 'Handstand', value: 5.00, deductions: [] }, { name: 'Cartwheel', value: 5.00, deductions: [] }] },
+      'SUELO': { baseScore: 10.00, elements: [{ name: 'Handspring', value: 5.00, deductions: [] }, { name: 'Split Leap 90°', value: 5.00, deductions: [] }] }
     }
   }
 };
