@@ -24,11 +24,12 @@ window.EVAL_LEVEL_DETAILS = {
         baseScore: 10.00,
         elements: [
           { name: 'Salto en extensión hacia colchones', value: 10.00, deductions: [
-            { id: 'v1', text: 'Falta fase de vuelo (altura)', val: 0.30 },
-            { id: 'v2', text: 'Cuerpo carpado/arqueado', val: 0.20 },
-            { id: 'v3', text: 'Pies no simultáneos', val: 0.10 },
-            { id: 'v4', text: 'Cerrar pies en el aire', val: 0.10 },
-            { id: 'v5', text: 'Aterrizaje inestable', val: 0.30 }
+            { id: 'v1', text: 'Ayuda durante el salto', val: 2.00 },
+            { id: 'v2', text: 'Ayuda en el aterrizaje', val: 0.50 },
+            { id: 'v3', text: 'Falta de altura', val: 0.50 },
+            { id: 'v4', text: 'Piernas separadas', val: 0.20 },
+            { id: 'v5', text: 'Piernas dobladas', val: 0.30 },
+            { id: 'v6', text: 'No aterrizar en demi-plié', val: 0.50 }
           ]}
         ]
       },
@@ -85,8 +86,14 @@ window.EVAL_LEVEL_DETAILS = {
       'SALTO': {
         baseScore: 10.00,
         elements: [
-          { name: 'Carrera y Pique', value: 5.00, deductions: [] },
-          { name: 'Salto Extensión (básico)', value: 5.00, deductions: [] }
+          { name: 'Salto en extensión hacia colchones', value: 10.00, deductions: [
+            { id: 'v1b1', text: 'Ayuda durante el salto', val: 2.00 },
+            { id: 'v1b2', text: 'Ayuda en el aterrizaje', val: 0.50 },
+            { id: 'v1b3', text: 'Falta de altura', val: 0.50 },
+            { id: 'v1b4', text: 'Piernas separadas', val: 0.20 },
+            { id: 'v1b5', text: 'Piernas dobladas', val: 0.30 },
+            { id: 'v1b6', text: 'No aterrizar en demi-plié', val: 0.50 }
+          ]}
         ]
       },
       'SUELO': {
@@ -105,8 +112,17 @@ window.EVAL_LEVEL_DETAILS = {
       'SALTO': {
         baseScore: 10.00,
         elements: [
-          { name: 'Salto en extensión', value: 5.00, deductions: [] },
-          { name: 'Vertical caída dorsal', value: 5.00, deductions: [] }
+          { name: 'Salto en extensión', value: 5.00, deductions: [
+            { id: 'v2e1', text: 'Ayuda durante el salto', val: 2.00 },
+            { id: 'v2e2', text: 'Ayuda en el aterrizaje', val: 0.50 },
+            { id: 'v2e3', text: 'Falta de altura', val: 0.50 },
+            { id: 'v2e4', text: 'Piernas separadas', val: 0.20 }
+          ]},
+          { name: 'Vertical caída dorsal', value: 5.00, deductions: [
+            { id: 'v2e5', text: 'Piernas dobladas', val: 0.30 },
+            { id: 'v2e6', text: 'No aterrizar en demi-plié', val: 0.50 },
+            { id: 'v2e7', text: 'Cuerpo carpado/arqueado', val: 0.20 }
+          ]}
         ]
       },
       'PARALELAS': {
@@ -432,7 +448,12 @@ window.GLOBAL_DEDUCTIONS = {
     { id: 'gl2', text: 'Paso largo (>1m)', val: 0.40 },
     { id: 'gl3', text: 'Sentadilla (cadera baja)', val: 0.30 },
     { id: 'gl4', text: 'Balanceo de brazos', val: 0.10 },
-    { id: 'gl5', text: 'Falta de fijeza (Stick)', val: 0.10 }
+    { id: 'gl5', text: 'Falta de fijeza (Stick)', val: 0.10 },
+    { id: 'gl6', text: 'Ayuda en aterrizaje', val: 0.50 }
   ],
-  'FALL': { id: 'fall', text: 'Caída (adicional)', val: 0.50 }
+  'FALL': { id: 'fall', text: 'Caída (adicional)', val: 0.50 },
+  'COACH': [
+    { id: 'c1', text: 'Ayuda durante elemento (General)', val: 2.00 },
+    { id: 'c2', text: 'Entrar a plataforma/área (sin motivo)', val: 0.50 }
+  ]
 };

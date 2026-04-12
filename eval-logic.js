@@ -25,6 +25,8 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentState = {
         gymnastName: '',
         birthYear: null,
+        birthDate: '',
+        age: 0,
         category: '',
         level: '',
         apparatus: '',
@@ -42,7 +44,8 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- DOM Elements ---
     const dom = {
         name: document.getElementById('gymnastName'),
-        birthYear: document.getElementById('birthYear'),
+        birthDate: document.getElementById('birthDate'),
+        ageLabel: document.getElementById('ageLabel'),
         categoryLabel: document.getElementById('categoryLabel'),
         levelSelect: document.getElementById('levelSelect'),
         apparatusSelect: document.getElementById('apparatusSelect'),
@@ -72,7 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function init() {
         // Event Listeners
         dom.name.addEventListener('input', e => currentState.gymnastName = e.target.value);
-        dom.birthYear.addEventListener('input', updateCategory);
+        dom.birthDate.addEventListener('change', updateCategory);
         dom.levelSelect.addEventListener('change', updateApparatusOptions);
         dom.apparatusSelect.addEventListener('change', startEvaluation);
         
@@ -110,25 +113,32 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Core Functions ---
 
     function updateCategory() {
-        const year = parseInt(dom.birthYear.value);
-        if(!year || year < 1990 || year > 2026) {
+        if(!dom.birthDate.value) {
             dom.categoryLabel.textContent = '---';
-            dom.categoryLabel.className = 'badge-status';
+            dom.ageLabel.textContent = '---';
             return;
         }
 
-        const age = 2026 - year;
+        const birthDate = new Date(dom.birthDate.value);
+        const currentYear = 2026; // Usamos 2026 según reglamento
+        const age = currentYear - birthDate.getFullYear();
+        
         const constants = window.EVAL_CONSTANTS || {};
         const categories = constants.CATEGORIES || [];
         const cat = categories.find(c => age >= c.min && age <= c.max);
         
+        currentState.birthDate = dom.birthDate.value;
+        currentState.age = age;
+        currentState.birthYear = birthDate.getFullYear();
+
+        dom.ageLabel.textContent = `${age} años`;
+        
         if(cat) {
             currentState.category = cat.name;
-            currentState.birthYear = year;
             dom.categoryLabel.textContent = cat.name;
             dom.categoryLabel.className = 'badge-status status-active';
         } else {
-            dom.categoryLabel.textContent = 'Fuera de Rango';
+            dom.categoryLabel.textContent = age < 6 ? 'Muy pequeña' : 'Fuera de Rango';
             dom.categoryLabel.className = 'badge-status status-warning';
         }
     }
