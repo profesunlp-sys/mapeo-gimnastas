@@ -66,10 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
         jumpAttemptGroup: document.getElementById('jumpAttemptGroup'),
         btnReset: document.getElementById('btnReset'),
         btnPrint: document.getElementById('btnPrint'),
-        btnSave: document.getElementById('btnSave')
+        btnSave: document.getElementById('btnSave'),
+        btnSaveMain: document.getElementById('btnSaveMain')
     };
 
-    // --- Initialization ---
     init();
 
     function init() {
@@ -86,6 +86,9 @@ document.addEventListener('DOMContentLoaded', () => {
         dom.btnReset.addEventListener('click', resetApp);
         dom.btnPrint.addEventListener('click', () => window.print());
         dom.btnSave.addEventListener('click', saveEvaluation);
+        if (dom.btnSaveMain) {
+            dom.btnSaveMain.addEventListener('click', saveEvaluation);
+        }
 
         // Vault Specific
         dom.emptyRunsGroup.addEventListener('click', e => {
