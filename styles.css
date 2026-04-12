@@ -481,3 +481,85 @@ textarea:focus{border-color:var(--primary)}
   .elem-name{font-size:.76rem}
   .elem-btn{padding:6px 7px;font-size:.7rem}
 }
+
+/* ─── RESUMEN POTENCIAL (NUEVO) ────────────────────── */
+.potencial-summary {
+  margin-top: 30px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 16px;
+}
+.potencial-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 8px;
+}
+.potencial-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+.pot-card {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-sm);
+  padding: 16px;
+  text-align: center;
+  transition: var(--transition);
+}
+.pot-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  border-color: var(--primary);
+}
+.pot-num {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--primary-light);
+  line-height: 1.2;
+}
+.pot-label {
+  font-size: 0.75rem;
+  color: var(--text2);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-top: 4px;
+}
+#pot-comp-asis .pot-num { color: var(--lvl-e1a); }
+#pot-apren .pot-num { color: var(--green); }
+#pot-exp .pot-num { color: var(--lvl-e2); }
+#pot-elem .pot-num { color: var(--orange); }
+
+/* ─── ASISTENCIA PROGRESS BAR (NUEVO) ──────────────── */
+.att-progress-cell {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-start;
+  min-width: 120px;
+}
+.att-bar {
+  width: 100%;
+  height: 6px;
+  background: var(--surface3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+.att-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.5s ease-out;
+}
+.att-labels {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-size: 0.75rem;
+}
+.att-details {
+  color: var(--text3);
+}

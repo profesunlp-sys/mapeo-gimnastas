@@ -200,13 +200,32 @@ function renderTable(filtered) {
     const lvlData = LEVEL_DATA[g.level];
     const lvlLabel = lvlData ? lvlData.label : (g.level || '—');
     const pred = PRED_LABELS[g.predisposicion];
+    
+    // Asistencia visual (ProgressBar)
+    let attHtml = '<span class="dash">—</span>';
+    if (att !== '—') {
+      const attVal = parseInt(att);
+      const color = attVal >= 90 ? '#10b981' : attVal >= 70 ? '#f59e0b' : '#ef4444';
+      attHtml = `
+        <div class="att-progress-cell">
+           <div class="att-bar">
+             <div class="att-fill" style="width: ${attVal}%; background: ${color}"></div>
+           </div>
+           <div class="att-labels">
+             <span class="att-details">${g.asistio}/${g.totalClases} clases</span>
+             <span class="att-pct" style="color: ${color}"><strong>${attVal}%</strong></span>
+           </div>
+        </div>
+      `;
+    }
+
     return `<tr>
       <td class="row-num">${i + 1}</td>
       <td class="col-name">${esc(g.name) || '<span class="dash">Sin nombre</span>'}</td>
       <td><span class="lvl-badge badge-${g.level || 'Principiante'}">${esc(lvlLabel)}</span></td>
       <td>${g.years !== '' && g.years !== undefined ? g.years + ' año' + (g.years != 1 ? 's' : '') : '<span class="dash">—</span>'}</td>
       <td>${g.days ? g.days + '/sem' : '<span class="dash">—</span>'}</td>
-      <td><span class="att-num ${attClass}">${att}${att !== '—' ? '%' : ''}</span></td>
+      <td>${attHtml}</td>
       <td>${boolDisplayText(g.comprende)}</td>
       <td>${boolDisplayText(g.incorpora)}</td>
       <td>${pred ? `<span class="pred-mini ${pred.cls}">${pred.text}</span>` : '<span class="dash">—</span>'}</td>
@@ -229,10 +248,34 @@ function esc(s) {
 // ─── STATS ─────────────────────────────────────────
 function updateStats() {
   const counts = { E1B:0,E1A:0,E2:0,E3:0,USAG1B:0,USAG1A:0,USAG2:0,USAG3:0,comp:0 };
+  
+  // Nuevas Métricas de "Resumen de Potencial"
+  let potCompAsis = 0;
+  let potApren = 0;
+  let potExp = 0;
+  let potElem = 0;
+
   gymnasts.forEach(g => {
     if (counts[g.level] !== undefined) counts[g.level]++;
     if (g.predisposicion === '1' || g.predisposicion === '2') counts.comp++;
+    
+    // Potencial calculations
+    const isComp = (g.predisposicion === '1' || g.predisposicion === '2');
+    const asisPct = parseInt(calcAtt(g.totalClases, g.asistio));
+    if (isComp && !isNaN(asisPct) && asisPct >= 80) potCompAsis++;
+    
+    if (g.comprende === 'si' && g.incorpora === 'si') potApren++;
+    
+    if (parseInt(g.years || 0) >= 2) potExp++;
+    
+    const elementsKeys = Object.keys(g.elements || {});
+    let validElems = 0;
+    elementsKeys.forEach(k => {
+      if (g.elements[k] !== 'no') validElems++; // trab or adq
+    });
+    if (validElems >= 5) potElem++;
   });
+  
   document.querySelector('#stat-total .stat-num').textContent = gymnasts.length;
   document.querySelector('#stat-e1b .stat-num').textContent = counts.E1B;
   document.querySelector('#stat-e1a .stat-num').textContent = counts.E1A;
@@ -243,6 +286,18 @@ function updateStats() {
   document.querySelector('#stat-u2 .stat-num').textContent = counts.USAG2;
   document.querySelector('#stat-u3 .stat-num').textContent = counts.USAG3;
   document.querySelector('#stat-comp .stat-num').textContent = counts.comp;
+  
+  // Modificar nuevas tarjetas
+  const elCompAsis = document.querySelector('#pot-comp-asis .pot-num');
+  if (elCompAsis) {
+    elCompAsis.textContent = potCompAsis;
+    document.querySelector('#pot-apren .pot-num').textContent = potApren;
+    document.querySelector('#pot-exp .pot-num').textContent = potExp;
+    document.querySelector('#pot-elem .pot-num').textContent = potElem;
+    
+    // Sólo mostrar el panel de potencial si hay gimnastas cargados
+    document.getElementById('potencialSummary').style.display = gymnasts.length > 0 ? 'block' : 'none';
+  }
 }
 
 // ─── MODAL ────────────────────────────────────────
