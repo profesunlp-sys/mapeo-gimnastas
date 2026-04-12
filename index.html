@@ -64,7 +64,10 @@
 
   <!-- TOOLBAR -->
   <div class="toolbar">
-    <button class="btn-add" id="btnAdd" onclick="openModal(null)">+ Agregar Gimnasta</button>
+    <div class="btn-group">
+        <button class="btn-add" id="btnAdd" onclick="openModal(null)">+ Agregar Gimnasta</button>
+        <a href="evaluacion.html" class="btn-add" style="background: var(--viga); text-decoration: none; margin-left: 10px;">📋 Evaluación CAG</a>
+    </div>
     <div class="filter-group">
       <select id="filterLevel" onchange="renderView()" aria-label="Filtrar por nivel">
         <option value="">Todos los niveles</option>

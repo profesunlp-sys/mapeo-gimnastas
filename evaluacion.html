@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evaluación Técnica GAF - CAG 2026</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="eval-styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- HEADER -->
+        <header class="main-header">
+            <div class="header-content">
+                <div class="brand">
+                    <span class="logo">🤸‍♀️</span>
+                    <div>
+                        <h1>Evaluación Técnica</h1>
+                        <p>Programa CAG Niveles E 2026</p>
+                    </div>
+                </div>
+                <div class="header-actions">
+                    <button id="btnSave" class="btn btn-primary">💾 Guardar en Nube</button>
+                    <button id="btnPrint" class="btn btn-secondary">🖨 Imprimir Reporte</button>
+                    <button id="btnReset" class="btn btn-outline">🔄 Nueva Evaluación</button>
+                </div>
+            </div>
+        </header>
+
+        <main class="container">
+            <!-- STEP 1: GIMNASTA DATA -->
+            <section class="card profile-section">
+                <div class="section-header">
+                    <span class="step-num">01</span>
+                    <h2>Datos de la Gimnasta</h2>
+                </div>
+                <div class="form-row">
+                    <div class="form-group flex-2">
+                        <label for="gymnastName">Nombre Completo</label>
+                        <input type="text" id="gymnastName" placeholder="Apellido, Nombre" autocomplete="off">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label for="birthYear">Año de Nacimiento</label>
+                        <input type="number" id="birthYear" placeholder="ej: 2015" min="1990" max="2026">
+                    </div>
+                    <div class="form-group flex-1">
+                        <label>Categoría</label>
+                        <div id="categoryLabel" class="badge-status">Cargando...</div>
+                    </div>
+                </div>
+                <div class="form-row mt-4">
+                    <div class="form-group">
+                        <label for="levelSelect">Nivel Técnico</label>
+                        <select id="levelSelect">
+                            <option value="">Seleccionar Nivel...</option>
+                            <option value="E1A">Nivel E1 A (4 Aparatos)</option>
+                            <option value="E1B">Nivel E1 B (Salto + Suelo)</option>
+                            <option value="E2">Nivel E2 (4 Aparatos)</option>
+                            <option value="E3">Nivel E3 (4 Aparatos)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="apparatusSelect">Aparato a Evaluar</label>
+                        <select id="apparatusSelect">
+                            <option value="">Seleccionar Aparato...</option>
+                            <option value="SALTO">Salto (VT)</option>
+                            <option value="PARALELAS">Paralelas (UB)</option>
+                            <option value="VIGA">Viga (BB)</option>
+                            <option value="SUELO">Suelo (FX)</option>
+                        </select>
+                    </div>
+                </div>
+            </section>
+
+            <!-- STEP 2: EVALUATION CONTENT -->
+            <div id="evaluationArea" class="hidden">
+                <section class="card evaluation-section">
+                    <div class="section-header">
+                        <span class="step-num">02</span>
+                        <h2 id="evalTitle">Evaluación Técnica - Salto</h2>
+                    </div>
+
+                    <!-- VAULT SPECIFIC: RUNS -->
+                    <div id="vaultRunsArea" class="hidden mb-6">
+                        <h3 class="subsection-title">Control de Carreras y Saltos</h3>
+                        <div class="vault-controls">
+                            <div class="control-box">
+                                <span>Carreras Vacías:</span>
+                                <div class="btn-group" id="emptyRunsGroup">
+                                    <button data-runs="0" class="active">0</button>
+                                    <button data-runs="1">1</button>
+                                    <button data-runs="2">2</button>
+                                    <button data-runs="3">3</button>
+                                </div>
+                            </div>
+                            <div class="control-box">
+                                <span>Intento:</span>
+                                <div class="btn-group" id="jumpAttemptGroup">
+                                    <button data-attempt="1" class="active">1er Salto</button>
+                                    <button data-attempt="2">2do Salto</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="vaultWarning" class="alert hidden"></div>
+                    </div>
+
+                    <!-- ELEMENTS TABLE -->
+                    <div class="table-container">
+                        <table id="elementsTable">
+                            <thead>
+                                <tr>
+                                    <th>Elemento Obligatorio</th>
+                                    <th>Valor</th>
+                                    <th>Deducciones Técnicas</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="elementsBody">
+                                <!-- Dinámico -->
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- GLOBAL DEDUCTIONS -->
+                    <div class="global-deductions-grid mt-8">
+                        <div class="deduction-block">
+                            <h3 class="subsection-title">Faltas Generales de Ejecución</h3>
+                            <div id="executionDeductions" class="checkbox-grid">
+                                <!-- Dinámico -->
+                            </div>
+                        </div>
+                        <div class="deduction-block">
+                            <h3 class="subsection-title">Faltas de Aterrizaje</h3>
+                            <div id="landingDeductions" class="checkbox-grid">
+                                <!-- Dinámico -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FALLS -->
+                    <div class="falls-counter">
+                        <div class="counter-label">
+                            <span class="icon">⚠️</span>
+                            <div>
+                                <strong>Caídas</strong>
+                                <small>Penalización de 0.50 pts cada una (Cap. adicional)</small>
+                            </div>
+                        </div>
+                        <div class="counter-controls">
+                            <button id="btnMinusFall" class="btn-circle">-</button>
+                            <span id="fallCount">0</span>
+                            <button id="btnPlusFall" class="btn-circle">+</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- STEP 3: SUMMARY & SCORE -->
+                <section class="score-panel">
+                    <div class="score-card">
+                        <div class="score-main">
+                            <span class="score-label">Puntaje Final</span>
+                            <span id="finalScore" class="score-value">10.00</span>
+                        </div>
+                        <div class="score-details">
+                            <div class="detail-item">
+                                <span>Valor de Partida (VP)</span>
+                                <span id="startValue">10.00</span>
+                            </div>
+                            <div class="detail-item text-danger">
+                                <span>Deducciones Totales</span>
+                                <span id="totalDeductions">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="observations-card">
+                        <label for="observations">Observaciones del Juez / Entrenador</label>
+                        <textarea id="observations" placeholder="Escribí notas sobre la técnica, postura o correcciones específicas..."></textarea>
+                    </div>
+                </section>
+            </div>
+
+            <!-- PROMPT TO START -->
+            <div id="startPrompt" class="start-prompt">
+                <div class="prompt-icon">🔍</div>
+                <h3>Esperando Selección</h3>
+                <p>Elegí un <strong>Nivel</strong> y un <strong>Aparato</strong> para comenzar la evaluación técnica.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- SCRIPTS -->
+    <script src="eval-data.js"></script>
+    <script type="module" src="eval-logic.js"></script>
+</body>
+</html>
