@@ -24,7 +24,7 @@ let gymnasts = [];
 let editingId = null;
 let formState = {};
 
-// ─── EXPORT TO WINDOW TO MAKE ONCLICK WORK in ES MODULE ────────
+// ─── EXPORT TO WINDOW ──────────────────────────────
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.closeModalOnOverlay = closeModalOnOverlay;
@@ -38,6 +38,74 @@ window.deleteGymnast = deleteGymnast;
 window.exportExcel = exportExcel;
 window.exportCSV = exportCSV;
 window.renderView = renderView;
+window.onGroupChange = onGroupChange;
+
+// ─── POBLAR FILTROS (se llama una sola vez al cargar) ─
+function populateFilters() {
+  // ── Filtro de niveles con colores ──────────────────
+  const filterLevel = document.getElementById('filterLevel');
+  if (filterLevel) {
+    filterLevel.innerHTML = `
+      <option value="">Todos los niveles</option>
+      <option value="Principiante">🔵 Principiante</option>
+      <option value="E1B">🟢 E1B</option>
+      <option value="E1A">🔵 E1A</option>
+      <option value="E2">🟣 E2</option>
+      <option value="E3">🔴 E3</option>
+      <option value="USAG1B">🟠 USAG 1B</option>
+      <option value="USAG1A">🟡 USAG 1A</option>
+      <option value="USAG2">🟠 USAG 2</option>
+      <option value="USAG3">🔴 USAG 3</option>
+      <option value="Recreativo">⚪ Recreativo</option>
+    `;
+  }
+
+  // ── Filtro de grupos (agrupado por días) ───────────
+  const fg = document.getElementById('filterGroup');
+  if (fg) {
+    fg.innerHTML = '<option value="">Todos los Grupos / Profesores</option>';
+    let currentDays = '';
+    let optgroup = null;
+    window.CLUB_GROUPS.forEach(gr => {
+      if (gr.days !== currentDays) {
+        if (optgroup) fg.appendChild(optgroup);
+        optgroup = document.createElement('optgroup');
+        optgroup.label = '📅 ' + gr.days;
+        currentDays = gr.days;
+      }
+      const opt = document.createElement('option');
+      opt.value = gr.id;
+      const detail = gr.levelDetail ? ` (${gr.levelDetail})` : '';
+      opt.textContent = `${gr.teacher} — ${gr.age}${detail}`;
+      optgroup.appendChild(opt);
+    });
+    if (optgroup) fg.appendChild(optgroup);
+  }
+
+  // ── Filtro de predisposición (ya está en el HTML, no se toca) ──
+}
+
+// ─── POBLAR DROPDOWN DE GRUPO EN EL FORMULARIO ────
+function populateFormGroup() {
+  const fGroupSelect = document.getElementById('fGroup');
+  if (!fGroupSelect) return;
+  fGroupSelect.innerHTML = '<option value="">— Seleccionar Grupo —</option>';
+  let currentDays = '';
+  let optgroup = null;
+  window.CLUB_GROUPS.forEach(gr => {
+    if (gr.days !== currentDays) {
+      if (optgroup) fGroupSelect.appendChild(optgroup);
+      optgroup = document.createElement('optgroup');
+      optgroup.label = gr.days;
+      currentDays = gr.days;
+    }
+    const opt = document.createElement('option');
+    opt.value = gr.id;
+    opt.textContent = `${gr.time} | ${gr.teacher} | ${gr.age} ${gr.levelDetail ? '('+gr.levelDetail+')' : ''}`;
+    optgroup.appendChild(opt);
+  });
+  if (optgroup) fGroupSelect.appendChild(optgroup);
+}
 
 // ─── INIT ──────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
@@ -58,27 +126,16 @@ document.addEventListener('DOMContentLoaded', () => {
   updateFABVisibility();
   window.addEventListener('resize', updateFABVisibility);
 
-  // Firestore Snapshot (cargará datos iniciales también)
+  // Poblar filtros inmediatamente (no esperar a Firebase)
+  populateFilters();
+
+  // Firestore Snapshot
   onSnapshot(gimnastasRef, (snapshot) => {
     gymnasts = [];
     snapshot.forEach((docSnapshot) => {
       gymnasts.push({ id: docSnapshot.id, ...docSnapshot.data() });
     });
-    // Ordenar por nombre
     gymnasts.sort((a,b) => (a.name || '').localeCompare(b.name || ''));
-    
-    // Poblar filtro de grupos si está vacío
-    const fg = document.getElementById('filterGroup');
-    if (fg && fg.options.length <= 1) {
-        window.CLUB_GROUPS.forEach(gr => {
-            const opt = document.createElement('option');
-            opt.value = gr.id;
-            const detail = gr.levelDetail ? ` (${gr.levelDetail})` : '';
-            opt.textContent = `${gr.days} - ${gr.teacher} - ${gr.age}${detail}`;
-            fg.appendChild(opt);
-        });
-    }
-    
     renderView();
     updateStats();
   }, (error) => {
@@ -152,7 +209,6 @@ function renderCards(filtered) {
     const lvlLabel = lvlData ? lvlData.label : (g.level || 'Sin nivel');
     const pred = PRED_LABELS[g.predisposicion];
     
-    // Group details
     const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
     const groupText = gr ? `${gr.days} (${gr.teacher})` : (g.days ? `${g.days}/sem` : '—');
     
@@ -223,7 +279,6 @@ function renderTable(filtered) {
     const lvlLabel = lvlData ? lvlData.label : (g.level || '—');
     const pred = PRED_LABELS[g.predisposicion];
     
-    // Asistencia visual (ProgressBar)
     let attHtml = '<span class="dash">—</span>';
     if (att !== '—') {
       const attVal = parseInt(att);
@@ -273,31 +328,20 @@ function esc(s) {
 // ─── STATS ─────────────────────────────────────────
 function updateStats() {
   const counts = { E1B:0,E1A:0,E2:0,E3:0,USAG1B:0,USAG1A:0,USAG2:0,USAG3:0,comp:0 };
-  
-  // Nuevas Métricas de "Resumen de Potencial"
-  let potCompAsis = 0;
-  let potApren = 0;
-  let potExp = 0;
-  let potElem = 0;
+  let potCompAsis = 0, potApren = 0, potExp = 0, potElem = 0;
 
   gymnasts.forEach(g => {
     if (counts[g.level] !== undefined) counts[g.level]++;
     if (g.predisposicion === '1' || g.predisposicion === '2') counts.comp++;
     
-    // Potencial calculations
     const isComp = (g.predisposicion === '1' || g.predisposicion === '2');
     const asisPct = parseInt(calcAtt(g.totalClases, g.asistio));
     if (isComp && !isNaN(asisPct) && asisPct >= 80) potCompAsis++;
-    
     if (g.comprende === 'si' && g.incorpora === 'si') potApren++;
-    
     if (parseInt(g.years || 0) >= 2) potExp++;
-    
     const elementsKeys = Object.keys(g.elements || {});
     let validElems = 0;
-    elementsKeys.forEach(k => {
-      if (g.elements[k] !== 'no') validElems++; // trab or adq
-    });
+    elementsKeys.forEach(k => { if (g.elements[k] !== 'no') validElems++; });
     if (validElems >= 5) potElem++;
   });
   
@@ -312,15 +356,12 @@ function updateStats() {
   document.querySelector('#stat-u3 .stat-num').textContent = counts.USAG3;
   document.querySelector('#stat-comp .stat-num').textContent = counts.comp;
   
-  // Modificar nuevas tarjetas
   const elCompAsis = document.querySelector('#pot-comp-asis .pot-num');
   if (elCompAsis) {
     elCompAsis.textContent = potCompAsis;
     document.querySelector('#pot-apren .pot-num').textContent = potApren;
     document.querySelector('#pot-exp .pot-num').textContent = potExp;
     document.querySelector('#pot-elem .pot-num').textContent = potElem;
-    
-    // Sólo mostrar el panel de potencial si hay gimnastas cargados
     document.getElementById('potencialSummary').style.display = gymnasts.length > 0 ? 'block' : 'none';
   }
 }
@@ -334,36 +375,16 @@ function openModal(id) {
   document.getElementById('btnDelete').style.display = id ? 'block' : 'none';
   document.body.style.overflow = 'hidden';
 
-  // Población de dropdown fGroup
-  const fGroupSelect = document.getElementById('fGroup');
-  if (fGroupSelect && fGroupSelect.options.length <= 1) {
-    fGroupSelect.innerHTML = '<option value="">— Seleccionar Grupo —</option>';
-    let currentDays = '';
-    let optgroup = null;
-    window.CLUB_GROUPS.forEach(gr => {
-      if (gr.days !== currentDays) {
-        if (optgroup) fGroupSelect.appendChild(optgroup);
-        optgroup = document.createElement('optgroup');
-        optgroup.label = gr.days;
-        currentDays = gr.days;
-      }
-      const opt = document.createElement('option');
-      opt.value = gr.id;
-      opt.textContent = `${gr.time} | ${gr.teacher} | ${gr.age} ${gr.levelDetail ? '('+gr.levelDetail+')' : ''}`;
-      optgroup.appendChild(opt);
-    });
-    if (optgroup) fGroupSelect.appendChild(optgroup);
-  }
+  // Poblar dropdown del formulario siempre (no solo la primera vez)
+  populateFormGroup();
 
   if (id) {
     const g = gymnasts.find(x => x.id === id);
     if (!g) return;
     document.getElementById('modalTitle').textContent = '✏ Editar Gimnasta';
     document.getElementById('fName').value = g.name || '';
-    if (document.getElementById('fGroup')) {
-      document.getElementById('fGroup').value = g.groupId || '';
-      onGroupChange(); // Forzar recalculó de clases teóricas
-    }
+    document.getElementById('fGroup').value = g.groupId || '';
+    onGroupChange();
     document.getElementById('fYears').value = g.years !== undefined ? g.years : '';
     document.getElementById('fTotalClases').value = g.totalClases || '';
     document.getElementById('fAsistio').value = g.asistio || '';
@@ -388,7 +409,7 @@ function openModal(id) {
   } else {
     document.getElementById('modalTitle').textContent = '+ Nueva Gimnasta';
     document.getElementById('fName').value = '';
-    if (document.getElementById('fGroup')) document.getElementById('fGroup').value = '';
+    document.getElementById('fGroup').value = '';
     document.getElementById('fYears').value = '';
     document.getElementById('fTotalClases').value = '';
     document.getElementById('fAsistio').value = '';
@@ -404,7 +425,6 @@ function openModal(id) {
     renderElements();
   }
 
-  // Focus name field after animation
   setTimeout(() => document.getElementById('fName').focus(), 300);
 }
 
@@ -478,12 +498,11 @@ function calculateExpectedClasses(groupId) {
   
   let validDays = [];
   const daysStr = gr.days.toLowerCase();
-  if (daysStr.includes('lunes y miércoles')) validDays = [1, 3];
+  if (daysStr.includes('lunes y miércoles') || daysStr.includes('lunes y miercoles')) validDays = [1, 3];
   else if (daysStr.includes('martes y jueves')) validDays = [2, 4];
   else if (daysStr.includes('sábado') || daysStr.includes('sabado')) validDays = [6];
   else return 0;
   
-  // Parseo seguro de fechas YYYY-MM-DD
   const parseSafe = (s) => {
     const parts = s.split('-');
     return new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
@@ -495,27 +514,20 @@ function calculateExpectedClasses(groupId) {
   
   let count = 0;
   let currentDate = new Date(start);
-  
-  // Limitar el bucle para evitar infinitos en caso de error
   let safety = 0;
   while (currentDate <= end && safety < 500) {
     safety++;
     if (validDays.includes(currentDate.getDay())) {
-      // Uso de locale para comparar fechas de forma segura sin UTC
       const y = currentDate.getFullYear();
       const m = String(currentDate.getMonth() + 1).padStart(2, '0');
       const d = String(currentDate.getDate()).padStart(2, '0');
       const dateStr = `${y}-${m}-${d}`;
-      
-      if (!holidays.includes(dateStr)) {
-        count++;
-      }
+      if (!holidays.includes(dateStr)) count++;
     }
     currentDate.setDate(currentDate.getDate() + 1);
   }
   return count;
 }
-
 
 // ─── ELEMENTS RENDERER ────────────────────────────
 function renderElements() {
@@ -581,11 +593,8 @@ async function saveGymnast() {
   const groupId = document.getElementById('fGroup')?.value || null;
   const classGroup = window.CLUB_GROUPS.find(gr => gr.id === groupId) || null;
   
-  // Seguridad: si el campo totalClases quedó vacío (placeholder "Calculado") lo calculamos ahora
   let totalClases = document.getElementById('fTotalClases').value;
-  if (!totalClases && groupId) {
-    totalClases = calculateExpectedClasses(groupId);
-  }
+  if (!totalClases && groupId) totalClases = calculateExpectedClasses(groupId);
 
   const g = {
     name,
@@ -652,7 +661,7 @@ async function deleteGymnast() {
   }
 }
 
-// ─── EXPORT CSV ────────────────────────────────────
+// ─── EXPORT ────────────────────────────────────────
 function exportExcel() {
   if (gymnasts.length === 0) { showToast('No hay datos para exportar.', true); return; }
   const teacher = document.getElementById('teacherName').value || 'Sin_Nombre';
@@ -672,7 +681,6 @@ function exportExcel() {
     const lvl = LEVEL_DATA[g.level] ? LEVEL_DATA[g.level].label : (g.level || '');
     const adq = Object.values(g.elements || {}).filter(v => v === 'adq').length;
     const trab = Object.values(g.elements || {}).filter(v => v === 'trab').length;
-    
     const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
     
     return [
@@ -687,17 +695,13 @@ function exportExcel() {
   const worksheetData = [headers, ...data];
   const wb = XLSX.utils.book_new();
   const ws = XLSX.utils.aoa_to_sheet(worksheetData);
-
-  // Ajustar el formato de porcentaje en la columna I (index 8)
   const range = XLSX.utils.decode_range(ws['!ref']);
   for (let R = range.s.r + 1; R <= range.e.r; ++R) {
     const cell = ws[XLSX.utils.encode_cell({r:R, c:8})];
     if(cell) cell.z = '0%';
   }
-
   XLSX.utils.book_append_sheet(wb, ws, "Mapeo");
   XLSX.writeFile(wb, `mapeo_gimnastas_${teacher.replace(/\s+/g,'_')}_${dateStr}.xlsx`);
-  
   showToast('✓ Excel (.xlsx) exportado correctamente.');
 }
 
@@ -716,7 +720,6 @@ function exportCSV() {
     const lvl = LEVEL_DATA[g.level] ? LEVEL_DATA[g.level].label : (g.level || '');
     const adq = Object.values(g.elements || {}).filter(v => v === 'adq').length;
     const trab = Object.values(g.elements || {}).filter(v => v === 'trab').length;
-    
     const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
     
     return [
