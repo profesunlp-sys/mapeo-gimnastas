@@ -7,12 +7,46 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0d0f1a">
-<meta name="description" content="Sistema digital de mapeo y evaluación de gimnastas artísticas. Detectá potencial deportivo, registrá asistencia y progreso pedagógico.">
+<meta name="description" content="Sistema digital de mapeo y evaluación de gimnastas artísticas.">
 <title>Mapeo de Gimnastas 2026</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
+<style>
+  /* ── Encabezados ordenables ── */
+  #mainTable thead th[data-col] {
+    cursor: pointer;
+    user-select: none;
+    white-space: nowrap;
+    transition: background 0.15s;
+  }
+  #mainTable thead th[data-col]:hover {
+    background: #2d5a8e;
+  }
+  #mainTable thead th[data-col]::after {
+    content: ' ⇅';
+    font-size: 10px;
+    opacity: 0.4;
+    display: inline-block;
+    margin-left: 2px;
+  }
+  #mainTable thead th[data-col].sort-asc::after {
+    content: ' ↑';
+    opacity: 1;
+    color: #60c0ff;
+  }
+  #mainTable thead th[data-col].sort-desc::after {
+    content: ' ↓';
+    opacity: 1;
+    color: #60c0ff;
+  }
+  /* Columna evaluación */
+  .col-eval {
+    text-align: center;
+    min-width: 90px;
+  }
+</style>
 </head>
 <body>
 <div id="app">
@@ -65,7 +99,7 @@
   <div class="toolbar">
     <div class="btn-group">
       <button class="btn-add" id="btnAdd" onclick="openModal(null)">+ Agregar Gimnasta</button>
-      <a href="evaluacion.html" class="btn-add" style="background: var(--viga); text-decoration: none; margin-left: 10px;">📋 Evaluación Técnica</a>
+      <a href="evaluacion.html" class="btn-add" style="background:var(--viga);text-decoration:none;margin-left:10px;">📋 Evaluación Técnica</a>
     </div>
     <div class="filter-group">
       <select id="filterLevel" onchange="renderView()" aria-label="Filtrar por nivel">
@@ -98,16 +132,17 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>Nombre y Apellido</th>
-          <th>Nivel</th>
-          <th>Años</th>
-          <th>Días / Profe</th>
-          <th>Asistencia</th>
-          <th>Comprende</th>
-          <th>Incorpora</th>
-          <th>Predisposición</th>
-          <th>Flexib.</th>
-          <th>Fuerza</th>
+          <th data-col="name"          onclick="sortByCol('name')">Nombre y Apellido</th>
+          <th data-col="level"         onclick="sortByCol('level')">Nivel</th>
+          <th data-col="years"         onclick="sortByCol('years')">Años</th>
+          <th data-col="group"         onclick="sortByCol('group')">Días / Profe</th>
+          <th data-col="asistencia"    onclick="sortByCol('asistencia')">Asistencia</th>
+          <th data-col="comprende"     onclick="sortByCol('comprende')">Comprende</th>
+          <th data-col="incorpora"     onclick="sortByCol('incorpora')">Incorpora</th>
+          <th data-col="predisposicion" onclick="sortByCol('predisposicion')">Predisposición</th>
+          <th data-col="flex"          onclick="sortByCol('flex')">Flexib.</th>
+          <th data-col="fuerza"        onclick="sortByCol('fuerza')">Fuerza</th>
+          <th data-col="evaluacion"    onclick="sortByCol('evaluacion')" class="col-eval">Evaluación</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -124,22 +159,10 @@
     <div class="potencial-summary" id="potencialSummary" style="display:none">
       <h3 class="potencial-title">Resumen de Potencial Competitivo</h3>
       <div class="potencial-cards">
-        <div class="pot-card" id="pot-comp-asis">
-          <div class="pot-num">0</div>
-          <div class="pot-label">Competitivos + Alta asistencia</div>
-        </div>
-        <div class="pot-card" id="pot-apren">
-          <div class="pot-num">0</div>
-          <div class="pot-label">Aprendizaje rápido</div>
-        </div>
-        <div class="pot-card" id="pot-exp">
-          <div class="pot-num">0</div>
-          <div class="pot-label">2+ años exp.</div>
-        </div>
-        <div class="pot-card" id="pot-elem">
-          <div class="pot-num">0</div>
-          <div class="pot-label">5+ elementos trab/adg.</div>
-        </div>
+        <div class="pot-card" id="pot-comp-asis"><div class="pot-num">0</div><div class="pot-label">Competitivos + Alta asistencia</div></div>
+        <div class="pot-card" id="pot-apren"><div class="pot-num">0</div><div class="pot-label">Aprendizaje rápido</div></div>
+        <div class="pot-card" id="pot-exp"><div class="pot-num">0</div><div class="pot-label">2+ años exp.</div></div>
+        <div class="pot-card" id="pot-elem"><div class="pot-num">0</div><div class="pot-label">5+ elementos trab/adg.</div></div>
       </div>
     </div>
 
@@ -169,8 +192,7 @@
           </div>
           <div class="form-group full">
             <label for="fGroup">Grupo (Días, Horarios y Profesores)</label>
-            <select id="fGroup" onchange="onGroupChange()">
-            </select>
+            <select id="fGroup" onchange="onGroupChange()"></select>
           </div>
           <div class="form-group">
             <label for="fYears">Años en la actividad</label>
@@ -289,26 +311,26 @@
         </div>
       </div>
 
-      <!-- SECCIÓN 6: Evaluación Física y Flexibilidad (NUEVA) -->
-      <div class="form-section" style="border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 14px; background: rgba(30,58,95,0.15);">
-        <h3 class="section-title" style="color: #60a5fa;">🏋️ Preparación Física y Flexibilidad</h3>
-        <p style="font-size: 12px; color: #6b7280; margin: 0 0 12px;">
+      <!-- SECCIÓN 6: Evaluación Física y Flexibilidad -->
+      <div class="form-section" style="border:1px solid rgba(59,130,246,0.2);border-radius:10px;padding:14px;background:rgba(30,58,95,0.15);">
+        <h3 class="section-title" style="color:#60a5fa;">🏋️ Preparación Física y Flexibilidad</h3>
+        <p style="font-size:12px;color:#6b7280;margin:0 0 12px;">
           Registrá los tests de fuerza y flexibilidad basados en el programa de desarrollo USAG.
           Los resultados se guardan en la nube asociados a esta gimnasta.
         </p>
-        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <div style="display:flex;gap:10px;flex-wrap:wrap;">
           <button type="button"
             onclick="openEvalFisicaFromModal('fuerza')"
-            style="flex:1; min-width:130px; background:#1d4ed8; color:#fff; border:none; border-radius:8px; padding:10px 14px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; justify-content:center;">
+            style="flex:1;min-width:130px;background:#1d4ed8;color:#fff;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;justify-content:center;">
             💪 Evaluar Fuerza
           </button>
           <button type="button"
             onclick="openEvalFisicaFromModal('flexibilidad')"
-            style="flex:1; min-width:130px; background:#065f46; color:#fff; border:none; border-radius:8px; padding:10px 14px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; justify-content:center;">
+            style="flex:1;min-width:130px;background:#065f46;color:#fff;border:none;border-radius:8px;padding:10px 14px;cursor:pointer;font-size:13px;font-weight:600;display:flex;align-items:center;gap:6px;justify-content:center;">
             🤸 Evaluar Flexibilidad
           </button>
         </div>
-        <p id="ef-modal-nota" style="font-size:11px; color:#f59e0b; margin:8px 0 0; text-align:center;">
+        <p id="ef-modal-nota" style="font-size:11px;color:#f59e0b;margin:8px 0 0;text-align:center;">
           ⚠️ Guardá la gimnasta primero para poder registrar la evaluación física.
         </p>
       </div>
