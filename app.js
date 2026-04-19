@@ -39,28 +39,27 @@ window.exportExcel = exportExcel;
 window.exportCSV = exportCSV;
 window.renderView = renderView;
 window.onGroupChange = onGroupChange;
+window.openEvalFisicaFromModal = openEvalFisicaFromModal;
 
-// ─── POBLAR FILTROS (se llama una sola vez al cargar) ─
+// ─── POBLAR FILTROS ────────────────────────────────
 function populateFilters() {
-  // ── Filtro de niveles con colores ──────────────────
   const filterLevel = document.getElementById('filterLevel');
   if (filterLevel) {
     filterLevel.innerHTML = `
       <option value="">Todos los niveles</option>
-      <option value="Principiante">🔵 Principiante</option>
-      <option value="E1B">🟢 E1B</option>
-      <option value="E1A">🔵 E1A</option>
-      <option value="E2">🟣 E2</option>
-      <option value="E3">🔴 E3</option>
-      <option value="USAG1B">🟠 USAG 1B</option>
-      <option value="USAG1A">🟡 USAG 1A</option>
-      <option value="USAG2">🟠 USAG 2</option>
-      <option value="USAG3">🔴 USAG 3</option>
-      <option value="Recreativo">⚪ Recreativo</option>
+      <option value="Principiante">Principiante</option>
+      <option value="E1B">E1B</option>
+      <option value="E1A">E1A</option>
+      <option value="E2">E2</option>
+      <option value="E3">E3</option>
+      <option value="USAG1B">USAG 1B</option>
+      <option value="USAG1A">USAG 1A</option>
+      <option value="USAG2">USAG 2</option>
+      <option value="USAG3">USAG 3</option>
+      <option value="Recreativo">Recreativo</option>
     `;
   }
 
-  // ── Filtro de grupos (agrupado por días) ───────────
   const fg = document.getElementById('filterGroup');
   if (fg) {
     fg.innerHTML = '<option value="">Todos los Grupos / Profesores</option>';
@@ -81,11 +80,8 @@ function populateFilters() {
     });
     if (optgroup) fg.appendChild(optgroup);
   }
-
-  // ── Filtro de predisposición (ya está en el HTML, no se toca) ──
 }
 
-// ─── POBLAR DROPDOWN DE GRUPO EN EL FORMULARIO ────
 function populateFormGroup() {
   const fGroupSelect = document.getElementById('fGroup');
   if (!fGroupSelect) return;
@@ -117,19 +113,15 @@ document.addEventListener('DOMContentLoaded', () => {
     localStorage.setItem('teacherName', e.target.value);
   });
 
-  // Toast
   const toast = document.createElement('div');
   toast.id = 'toast';
   document.body.appendChild(toast);
 
-  // FAB visibility
   updateFABVisibility();
   window.addEventListener('resize', updateFABVisibility);
 
-  // Poblar filtros inmediatamente (no esperar a Firebase)
   populateFilters();
 
-  // Firestore Snapshot
   onSnapshot(gimnastasRef, (snapshot) => {
     gymnasts = [];
     snapshot.forEach((docSnapshot) => {
@@ -163,7 +155,7 @@ function getFiltered() {
   const fp = document.getElementById('filterPred').value;
   const fg = document.getElementById('filterGroup').value;
   const fn = document.getElementById('filterName').value.toLowerCase();
-  
+
   return gymnasts.filter(g => {
     if (fl && g.level !== fl) return false;
     if (fp && g.predisposicion !== fp) return false;
@@ -173,7 +165,7 @@ function getFiltered() {
   });
 }
 
-// ─── RENDER (dual: cards + table) ──────────────────
+// ─── RENDER ────────────────────────────────────────
 function renderView() {
   const filtered = getFiltered();
   const empty = document.getElementById('emptyState');
@@ -194,7 +186,7 @@ function renderView() {
   renderTable(filtered);
 }
 
-// ─── CARDS (mobile / tablet) ───────────────────────
+// ─── CARDS ─────────────────────────────────────────
 function renderCards(filtered) {
   const container = document.getElementById('cardsList');
   if (filtered.length === 0) {
@@ -208,10 +200,10 @@ function renderCards(filtered) {
     const lvlData = LEVEL_DATA[g.level];
     const lvlLabel = lvlData ? lvlData.label : (g.level || 'Sin nivel');
     const pred = PRED_LABELS[g.predisposicion];
-    
     const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
     const groupText = gr ? `${gr.days} (${gr.teacher})` : (g.days ? `${g.days}/sem` : '—');
-    
+    const safeName = (g.name || '').replace(/'/g, '');
+
     return `<div class="gymnast-card">
       <div class="card-top">
         <div>
@@ -250,7 +242,11 @@ function renderCards(filtered) {
         </div>
       </div>
       <div class="card-actions">
-        <button class="btn-edit-card" onclick="openModal('${g.id}')">✏ Ver / Editar</button>
+        <button class="btn-edit-card" onclick="openModal('${g.id}')">✏ Editar</button>
+        <button class="btn-edit-card"
+          onclick="openEvalFisica('${g.id}','${safeName}')"
+          style="background:#1e3a5f; margin-left:6px; flex:0; padding:8px 12px;"
+          title="Evaluación Física">🏋️ Físico</button>
       </div>
     </div>`;
   }).join('');
@@ -268,17 +264,17 @@ function physDisplayText(v) {
   return `<span class="phys-mini phys-${v}">${v}</span>`;
 }
 
-// ─── TABLE (desktop) ───────────────────────────────
+// ─── TABLE ─────────────────────────────────────────
 function renderTable(filtered) {
   const tbody = document.getElementById('tableBody');
   if (!filtered || filtered.length === 0) { tbody.innerHTML = ''; return; }
   tbody.innerHTML = filtered.map((g, i) => {
     const att = calcAtt(g.totalClases, g.asistio);
-    const attClass = att === '—' ? 'dash' : (parseInt(att) >= 80 ? 'att-high' : parseInt(att) >= 60 ? 'att-mid' : 'att-low');
     const lvlData = LEVEL_DATA[g.level];
     const lvlLabel = lvlData ? lvlData.label : (g.level || '—');
     const pred = PRED_LABELS[g.predisposicion];
-    
+    const safeName = (g.name || '').replace(/'/g, '');
+
     let attHtml = '<span class="dash">—</span>';
     if (att !== '—') {
       const attVal = parseInt(att);
@@ -297,7 +293,9 @@ function renderTable(filtered) {
     }
 
     const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
-    const groupText = gr ? `${gr.days}<br><span style="color:var(--text3);font-size:0.75rem">${gr.teacher}</span>` : (g.days ? `${g.days}/sem` : '<span class="dash">—</span>');
+    const groupText = gr
+      ? `${gr.days}<br><span style="color:var(--text3);font-size:0.75rem">${gr.teacher}</span>`
+      : (g.days ? `${g.days}/sem` : '<span class="dash">—</span>');
 
     return `<tr>
       <td class="row-num">${i + 1}</td>
@@ -311,7 +309,13 @@ function renderTable(filtered) {
       <td>${pred ? `<span class="pred-mini ${pred.cls}">${pred.text}</span>` : '<span class="dash">—</span>'}</td>
       <td>${physDisplayText(g.flex)}</td>
       <td>${physDisplayText(g.fuerzaBrazos)}</td>
-      <td><button class="btn-edit" onclick="openModal('${g.id}')">✏ Ver / Editar</button></td>
+      <td style="white-space:nowrap">
+        <button class="btn-edit" onclick="openModal('${g.id}')">✏ Editar</button>
+        <button class="btn-edit"
+          onclick="openEvalFisica('${g.id}','${safeName}')"
+          style="margin-left:4px; background:#1e3a5f;"
+          title="Evaluación Física">🏋️</button>
+      </td>
     </tr>`;
   }).join('');
 }
@@ -327,13 +331,12 @@ function esc(s) {
 
 // ─── STATS ─────────────────────────────────────────
 function updateStats() {
-  const counts = { E1B:0,E1A:0,E2:0,E3:0,USAG1B:0,USAG1A:0,USAG2:0,USAG3:0,comp:0 };
+  const counts = { E1B:0, E1A:0, E2:0, E3:0, USAG1B:0, USAG1A:0, USAG2:0, USAG3:0, comp:0 };
   let potCompAsis = 0, potApren = 0, potExp = 0, potElem = 0;
 
   gymnasts.forEach(g => {
     if (counts[g.level] !== undefined) counts[g.level]++;
     if (g.predisposicion === '1' || g.predisposicion === '2') counts.comp++;
-    
     const isComp = (g.predisposicion === '1' || g.predisposicion === '2');
     const asisPct = parseInt(calcAtt(g.totalClases, g.asistio));
     if (isComp && !isNaN(asisPct) && asisPct >= 80) potCompAsis++;
@@ -344,7 +347,7 @@ function updateStats() {
     elementsKeys.forEach(k => { if (g.elements[k] !== 'no') validElems++; });
     if (validElems >= 5) potElem++;
   });
-  
+
   document.querySelector('#stat-total .stat-num').textContent = gymnasts.length;
   document.querySelector('#stat-e1b .stat-num').textContent = counts.E1B;
   document.querySelector('#stat-e1a .stat-num').textContent = counts.E1A;
@@ -355,7 +358,7 @@ function updateStats() {
   document.querySelector('#stat-u2 .stat-num').textContent = counts.USAG2;
   document.querySelector('#stat-u3 .stat-num').textContent = counts.USAG3;
   document.querySelector('#stat-comp .stat-num').textContent = counts.comp;
-  
+
   const elCompAsis = document.querySelector('#pot-comp-asis .pot-num');
   if (elCompAsis) {
     elCompAsis.textContent = potCompAsis;
@@ -366,17 +369,33 @@ function updateStats() {
   }
 }
 
-// ─── MODAL ────────────────────────────────────────
+// ─── MODAL ─────────────────────────────────────────
 function openModal(id) {
   editingId = id;
   formState = { comprende: null, incorpora: null, flex: null, fuerzaBrazos: null, fuerzaTronco: null, coordinacion: null };
+
+  // Exponer ID y nombre para que eval-fisica.js pueda accederlos
+  window._currentEditingId = id || null;
+  window._currentEditingName = id ? (gymnasts.find(x => x.id === id)?.name || '') : '';
+
   const overlay = document.getElementById('modalOverlay');
   overlay.classList.add('active');
   document.getElementById('btnDelete').style.display = id ? 'block' : 'none';
   document.body.style.overflow = 'hidden';
 
-  // Poblar dropdown del formulario siempre (no solo la primera vez)
   populateFormGroup();
+
+  // Actualizar nota del bloque de evaluación física
+  const efNota = document.getElementById('ef-modal-nota');
+  if (efNota) {
+    if (id) {
+      efNota.textContent = 'Podés registrar la evaluación física de esta gimnasta.';
+      efNota.style.color = '#6b7280';
+    } else {
+      efNota.textContent = '⚠️ Guardá la gimnasta primero para poder registrar la evaluación física.';
+      efNota.style.color = '#f59e0b';
+    }
+  }
 
   if (id) {
     const g = gymnasts.find(x => x.id === id);
@@ -428,6 +447,23 @@ function openModal(id) {
   setTimeout(() => document.getElementById('fName').focus(), 300);
 }
 
+// Abre eval-fisica desde dentro del modal de la gimnasta
+function openEvalFisicaFromModal(tabInicial) {
+  const id = window._currentEditingId;
+  const name = window._currentEditingName;
+  if (!id) {
+    showToast('Guardá la gimnasta primero para asociar la evaluación.', true);
+    return;
+  }
+  if (window.openEvalFisica) {
+    window.openEvalFisica(id, name);
+    setTimeout(() => {
+      const tab = document.querySelector(`.ef-tab[data-tab="${tabInicial}"]`);
+      if (tab) tab.click();
+    }, 100);
+  }
+}
+
 function clearToggles() {
   document.querySelectorAll('.toggle-group button').forEach(b => {
     b.className = b.className.replace(/\bactive-\w+\b/g, '');
@@ -447,7 +483,7 @@ function closeModalOnOverlay(e) {
   if (e.target === document.getElementById('modalOverlay')) closeModal();
 }
 
-// ─── FORM HELPERS ─────────────────────────────────
+// ─── FORM HELPERS ──────────────────────────────────
 function setToggle(field, val, btn, silent) {
   if (!val) return;
   formState[field] = val;
@@ -495,23 +531,23 @@ function onGroupChange() {
 function calculateExpectedClasses(groupId) {
   const gr = window.CLUB_GROUPS.find(g => g.id === groupId);
   if (!gr || !window.CLUB_CONFIG) return 0;
-  
+
   let validDays = [];
   const daysStr = gr.days.toLowerCase();
   if (daysStr.includes('lunes y miércoles') || daysStr.includes('lunes y miercoles')) validDays = [1, 3];
   else if (daysStr.includes('martes y jueves')) validDays = [2, 4];
   else if (daysStr.includes('sábado') || daysStr.includes('sabado')) validDays = [6];
   else return 0;
-  
+
   const parseSafe = (s) => {
     const parts = s.split('-');
     return new Date(parts[0], parts[1] - 1, parts[2], 0, 0, 0);
   };
-  
+
   const start = parseSafe(window.CLUB_CONFIG.periodStart);
   const end = parseSafe(window.CLUB_CONFIG.periodEnd);
   const holidays = window.CLUB_CONFIG.holidays || [];
-  
+
   let count = 0;
   let currentDate = new Date(start);
   let safety = 0;
@@ -529,7 +565,7 @@ function calculateExpectedClasses(groupId) {
   return count;
 }
 
-// ─── ELEMENTS RENDERER ────────────────────────────
+// ─── ELEMENTS RENDERER ─────────────────────────────
 function renderElements() {
   const level = document.getElementById('fLevel').value;
   const container = document.getElementById('elementsContainer');
@@ -592,7 +628,7 @@ async function saveGymnast() {
   const pred = document.querySelector('input[name="pred"]:checked');
   const groupId = document.getElementById('fGroup')?.value || null;
   const classGroup = window.CLUB_GROUPS.find(gr => gr.id === groupId) || null;
-  
+
   let totalClases = document.getElementById('fTotalClases').value;
   if (!totalClases && groupId) totalClases = calculateExpectedClasses(groupId);
 
@@ -600,7 +636,7 @@ async function saveGymnast() {
     name,
     groupId: groupId,
     years: document.getElementById('fYears').value,
-    days: classGroup ? classGroup.days : '', 
+    days: classGroup ? classGroup.days : '',
     totalClases: totalClases || "0",
     asistio: document.getElementById('fAsistio').value || "0",
     level: document.getElementById('fLevel').value,
@@ -628,7 +664,15 @@ async function saveGymnast() {
       showToast('✓ Gimnasta actualizada en la nube.');
     } else {
       g.createdAt = new Date().toISOString();
-      await addDoc(gimnastasRef, g);
+      const newDocRef = await addDoc(gimnastasRef, g);
+      // Actualizar ID disponible para poder abrir eval física inmediatamente
+      window._currentEditingId = newDocRef.id;
+      window._currentEditingName = name;
+      const efNota = document.getElementById('ef-modal-nota');
+      if (efNota) {
+        efNota.textContent = 'Podés registrar la evaluación física de esta gimnasta.';
+        efNota.style.color = '#6b7280';
+      }
       showToast('✓ Gimnasta agregada a la nube.');
     }
     closeModal();
@@ -646,7 +690,7 @@ async function deleteGymnast() {
   if (!editingId) return;
   const g = gymnasts.find(x => x.id === editingId);
   if (!confirm(`¿Eliminar a ${g ? g.name : 'esta gimnasta'} de la base de datos? Esta acción no se puede deshacer.`)) return;
-  
+
   try {
     const btnDel = document.getElementById('btnDelete');
     btnDel.disabled = true;
@@ -668,10 +712,10 @@ function exportExcel() {
   const dateStr = document.getElementById('evalDate').value || new Date().toISOString().split('T')[0];
 
   const headers = [
-    'Nombre', 'Nivel', 'Años Actividad', 'Grupo/Días', 'Profesor', 'Horario', 
-    'Clases Teóricas', 'Asistió', '% Asistencia', 'Comprende Consignas', 
-    'Incorpora Rápido', 'Predisposición', 'Flexibilidad', 'Fuerza Brazos', 
-    'Fuerza Tronco', 'Coordinación', 'Elem. Adquiridos', 'Elem. en Trabajo', 
+    'Nombre', 'Nivel', 'Años Actividad', 'Grupo/Días', 'Profesor', 'Horario',
+    'Clases Teóricas', 'Asistió', '% Asistencia', 'Comprende Consignas',
+    'Incorpora Rápido', 'Predisposición', 'Flexibilidad', 'Fuerza Brazos',
+    'Fuerza Tronco', 'Coordinación', 'Elem. Adquiridos', 'Elem. en Trabajo',
     'Dudas/Consultas', 'Observaciones', 'Fecha Evaluación'
   ];
 
@@ -682,11 +726,14 @@ function exportExcel() {
     const adq = Object.values(g.elements || {}).filter(v => v === 'adq').length;
     const trab = Object.values(g.elements || {}).filter(v => v === 'trab').length;
     const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
-    
+
     return [
-      g.name, lvl, parseInt(g.years || 0), gr ? gr.days : (g.days || ''), gr ? gr.teacher : '', gr ? gr.time : '',
-      parseInt(g.totalClases || 0), parseInt(g.asistio || 0), attPercent !== '—' ? attPercent / 100 : 0,
-      g.comprende || '', g.incorpora || '', pred ? pred.text.replace(/[🏆⭐💪🌸👪]/g,'').trim() : '',
+      g.name, lvl, parseInt(g.years || 0),
+      gr ? gr.days : (g.days || ''), gr ? gr.teacher : '', gr ? gr.time : '',
+      parseInt(g.totalClases || 0), parseInt(g.asistio || 0),
+      attPercent !== '—' ? attPercent / 100 : 0,
+      g.comprende || '', g.incorpora || '',
+      pred ? pred.text.replace(/[🏆⭐💪🌸👪]/g,'').trim() : '',
       g.flex || '', g.fuerzaBrazos || '', g.fuerzaTronco || '', g.coordinacion || '',
       adq, trab, g.dudas || '', g.obs || '', dateStr
     ];
@@ -710,9 +757,13 @@ function exportCSV() {
   const teacher = document.getElementById('teacherName').value || 'Sin_Nombre';
   const dateStr = document.getElementById('evalDate').value || new Date().toISOString().split('T')[0];
 
-  const headers = ['Nombre','Nivel','Años_Actividad','Grupo_Dias','Profesor','Horario','Total_Clases','Clases_Asistidas','Pct_Asistencia',
-    'Comprende_Consignas','Incorpora_Rapido','Predisposicion','Flexibilidad','Fuerza_Brazos','Fuerza_Tronco','Coordinacion',
-    'Elementos_Adquiridos','Elementos_Trabajo','Dudas','Observaciones','Fecha_Evaluacion'];
+  const headers = [
+    'Nombre','Nivel','Años_Actividad','Grupo_Dias','Profesor','Horario',
+    'Total_Clases','Clases_Asistidas','Pct_Asistencia','Comprende_Consignas',
+    'Incorpora_Rapido','Predisposicion','Flexibilidad','Fuerza_Brazos',
+    'Fuerza_Tronco','Coordinacion','Elementos_Adquiridos','Elementos_Trabajo',
+    'Dudas','Observaciones','Fecha_Evaluacion'
+  ];
 
   const rows = gymnasts.map(g => {
     const pred = PRED_LABELS[g.predisposicion];
@@ -721,13 +772,19 @@ function exportCSV() {
     const adq = Object.values(g.elements || {}).filter(v => v === 'adq').length;
     const trab = Object.values(g.elements || {}).filter(v => v === 'trab').length;
     const gr = window.CLUB_GROUPS.find(gr => gr.id === g.groupId) || null;
-    
+
     return [
-      g.name, lvl, g.years || '', gr ? gr.days : (g.days || ''), gr ? gr.teacher : '', gr ? gr.time : '',
-      g.totalClases || '', g.asistio || '', attPercent !== '—' ? attPercent + '%' : '',
-      g.comprende || '', g.incorpora || '', pred ? pred.text.replace(/[🏆⭐💪🌸👪]/g,'').trim() : '',
+      g.name, lvl, g.years || '',
+      gr ? gr.days : (g.days || ''), gr ? gr.teacher : '', gr ? gr.time : '',
+      g.totalClases || '', g.asistio || '',
+      attPercent !== '—' ? attPercent + '%' : '',
+      g.comprende || '', g.incorpora || '',
+      pred ? pred.text.replace(/[🏆⭐💪🌸👪]/g,'').trim() : '',
       g.flex || '', g.fuerzaBrazos || '', g.fuerzaTronco || '', g.coordinacion || '',
-      adq, trab, (g.dudas || '').replace(/\n/g,' '), (g.obs || '').replace(/\n/g,' '), dateStr
+      adq, trab,
+      (g.dudas || '').replace(/\n/g,' '),
+      (g.obs || '').replace(/\n/g,' '),
+      dateStr
     ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(',');
   });
 
