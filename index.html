@@ -36,7 +36,6 @@
           <label>Fecha</label>
           <input type="date" id="evalDate" />
         </div>
-        
         <div class="export-menu">
           <button class="btn-export" id="btnExportMain">⬇ Descargar Datos</button>
           <div class="export-options">
@@ -65,26 +64,15 @@
   <!-- TOOLBAR -->
   <div class="toolbar">
     <div class="btn-group">
-        <button class="btn-add" id="btnAdd" onclick="openModal(null)">+ Agregar Gimnasta</button>
-        <a href="evaluacion.html" class="btn-add" style="background: var(--viga); text-decoration: none; margin-left: 10px;">📋 Evaluación Técnica</a>
+      <button class="btn-add" id="btnAdd" onclick="openModal(null)">+ Agregar Gimnasta</button>
+      <a href="evaluacion.html" class="btn-add" style="background: var(--viga); text-decoration: none; margin-left: 10px;">📋 Evaluación Técnica</a>
     </div>
     <div class="filter-group">
       <select id="filterLevel" onchange="renderView()" aria-label="Filtrar por nivel">
         <option value="">Todos los niveles</option>
-        <option value="Principiante">Principiante</option>
-        <option value="E1B">E1B</option>
-        <option value="E1A">E1A</option>
-        <option value="E2">E2</option>
-        <option value="E3">E3</option>
-        <option value="USAG1B">USAG 1B</option>
-        <option value="USAG1A">USAG 1A</option>
-        <option value="USAG2">USAG 2</option>
-        <option value="USAG3">USAG 3</option>
-        <option value="Recreativo">Recreativo</option>
       </select>
       <select id="filterGroup" onchange="renderView()" aria-label="Filtrar por grupo/profesor">
         <option value="">Todos los Grupos / Profesores</option>
-        <!-- Se llena dinámicamente -->
       </select>
       <select id="filterPred" onchange="renderView()" aria-label="Filtrar por predisposición">
         <option value="">Todas</option>
@@ -99,10 +87,10 @@
     <span id="countLabel" class="count-label"></span>
   </div>
 
-  <!-- CONTENT AREA -->
+  <!-- CONTENT -->
   <div class="table-wrap">
 
-    <!-- MOBILE/TABLET: Cards -->
+    <!-- MOBILE: Cards -->
     <div class="cards-list" id="cardsList"></div>
 
     <!-- DESKTOP: Table -->
@@ -132,7 +120,7 @@
       <p>Tocá <strong>+ Agregar Gimnasta</strong> para comenzar.</p>
     </div>
 
-    <!-- RESUMEN POTENCIAL (NUEVO) -->
+    <!-- RESUMEN POTENCIAL -->
     <div class="potencial-summary" id="potencialSummary" style="display:none">
       <h3 class="potencial-title">Resumen de Potencial Competitivo</h3>
       <div class="potencial-cards">
@@ -156,13 +144,12 @@
     </div>
 
   </div>
-
-</div><!-- /#app -->
+</div>
 
 <!-- FAB mobile -->
 <button class="fab-add" id="fabAdd" onclick="openModal(null)" aria-label="Agregar gimnasta">＋</button>
 
-<!-- MODAL -->
+<!-- MODAL GIMNASTA -->
 <div id="modalOverlay" class="modal-overlay" onclick="closeModalOnOverlay(event)" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
   <div class="modal" id="modal">
     <div class="modal-drag" aria-hidden="true"></div>
@@ -183,7 +170,6 @@
           <div class="form-group full">
             <label for="fGroup">Grupo (Días, Horarios y Profesores)</label>
             <select id="fGroup" onchange="onGroupChange()">
-              <!-- Se llena dinámicamente con app.js -->
             </select>
           </div>
           <div class="form-group">
@@ -226,7 +212,6 @@
             </select>
           </div>
         </div>
-        <!-- Elementos dinámicos -->
         <div id="elementsContainer"></div>
       </div>
 
@@ -265,7 +250,7 @@
         </div>
       </div>
 
-      <!-- SECCIÓN 5: Condición física -->
+      <!-- SECCIÓN 5: Condición física base -->
       <div class="form-section">
         <h3 class="section-title">💪 Condición Física Base</h3>
         <div class="physical-grid">
@@ -304,13 +289,37 @@
         </div>
       </div>
 
-      <!-- SECCIÓN 6: Dudas / Consultas -->
+      <!-- SECCIÓN 6: Evaluación Física y Flexibilidad (NUEVA) -->
+      <div class="form-section" style="border: 1px solid rgba(59,130,246,0.2); border-radius: 10px; padding: 14px; background: rgba(30,58,95,0.15);">
+        <h3 class="section-title" style="color: #60a5fa;">🏋️ Preparación Física y Flexibilidad</h3>
+        <p style="font-size: 12px; color: #6b7280; margin: 0 0 12px;">
+          Registrá los tests de fuerza y flexibilidad basados en el programa de desarrollo USAG.
+          Los resultados se guardan en la nube asociados a esta gimnasta.
+        </p>
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+          <button type="button"
+            onclick="openEvalFisicaFromModal('fuerza')"
+            style="flex:1; min-width:130px; background:#1d4ed8; color:#fff; border:none; border-radius:8px; padding:10px 14px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; justify-content:center;">
+            💪 Evaluar Fuerza
+          </button>
+          <button type="button"
+            onclick="openEvalFisicaFromModal('flexibilidad')"
+            style="flex:1; min-width:130px; background:#065f46; color:#fff; border:none; border-radius:8px; padding:10px 14px; cursor:pointer; font-size:13px; font-weight:600; display:flex; align-items:center; gap:6px; justify-content:center;">
+            🤸 Evaluar Flexibilidad
+          </button>
+        </div>
+        <p id="ef-modal-nota" style="font-size:11px; color:#f59e0b; margin:8px 0 0; text-align:center;">
+          ⚠️ Guardá la gimnasta primero para poder registrar la evaluación física.
+        </p>
+      </div>
+
+      <!-- SECCIÓN 7: Dudas / Consultas -->
       <div class="form-section">
         <h3 class="section-title">❓ Dudas y Consultas de Enseñanza</h3>
         <textarea id="fDudas" placeholder="Anotá aquí cualquier dificultad técnica, pregunta o situación puntual..." rows="3"></textarea>
       </div>
 
-      <!-- SECCIÓN 7: Observaciones -->
+      <!-- SECCIÓN 8: Observaciones -->
       <div class="form-section">
         <h3 class="section-title">📝 Observaciones Generales</h3>
         <textarea id="fObs" placeholder="Cualquier observación adicional sobre el/la gimnasta..." rows="3"></textarea>
@@ -328,5 +337,6 @@
 <script src="https://cdn.sheetjs.com/xlsx-0.20.1/package/dist/xlsx.full.min.js"></script>
 <script src="data.js"></script>
 <script type="module" src="app.js"></script>
+<script type="module" src="eval-fisica.js"></script>
 </body>
 </html>
